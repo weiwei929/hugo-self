@@ -44,7 +44,7 @@ hugo
 
 2.用 Nginx/Apache 指向 public/ 目录即可上线
 
-##目录结构示例
+## 目录结构示例
 
 ```
 content/         # 文章内容（Markdown）
