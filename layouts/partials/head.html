@@ -148,10 +148,14 @@
 
 {{- partial "extend_head.html" . -}}
 
-{{- /* Misc */}}
+{{- /* SEO功能已精简 - 如需启用请取消注释相关行 */}}
 {{- if hugo.IsProduction | or (eq site.Params.env "production") }}
-{{- partial "google_analytics.html" . }}
-{{- partial "templates/opengraph.html" . }}
-{{- partial "templates/twitter_cards.html" . }}
-{{- partial "templates/schema_json.html" . }}
+{{- /* Google Analytics 已精简移除 */}}
+{{- /* partial "google_analytics.html" . */}}
+{{- /* OpenGraph 已精简移除 */}}
+{{- /* partial "templates/opengraph.html" . */}}
+{{- /* Twitter Cards 已精简移除 */}}
+{{- /* partial "templates/twitter_cards.html" . */}}
+{{- /* Schema JSON 已精简移除 */}}
+{{- /* partial "templates/schema_json.html" . */}}
 {{- end -}}

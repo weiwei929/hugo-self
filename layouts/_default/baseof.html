@@ -2,6 +2,22 @@
 {{- errorf "=> hugo v0.146.0 or greater is required for hugo-PaperMod to build " }}
 {{- end -}}
 
+{{- if eq .Type "admin" -}}
+{{- if eq .Layout "admin/login" -}}
+{{ partial "admin/login.html" . }}
+{{- else if eq .Layout "admin/index" -}}
+{{ partial "admin/index.html" . }}
+{{- else if eq .Layout "admin/documents" -}}
+{{ partial "admin/documents.html" . }}
+{{- else if eq .Layout "admin/images" -}}
+{{ partial "admin/images.html" . }}
+{{- else if eq .Layout "admin/process" -}}
+{{ partial "admin/process.html" . }}
+{{- else -}}
+{{ partial "admin/index.html" . }}
+{{- end -}}
+{{- else -}}
+
 <!DOCTYPE html>
 <html lang="{{ site.Language }}" dir="{{ .Language.LanguageDirection | default "auto" }}">
 
@@ -25,3 +41,4 @@
 </body>
 
 </html>
+{{- end -}}

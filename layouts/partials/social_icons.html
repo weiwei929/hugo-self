@@ -1,3 +1,5 @@
+{{/* 社交图标功能已精简移除 - 专注于内容展示 */}}
+{{- if site.Params.socialIcons -}}
 <div class="social-icons" {{ with .align}}align="{{.}}" {{- end }}>
     {{- range site.Params.socialIcons }}
     <a href="{{ trim .url " " | safeURL }}" target="_blank" rel="noopener noreferrer me"
@@ -6,3 +8,4 @@
     </a>
     {{- end }}
 </div>
+{{- end -}}

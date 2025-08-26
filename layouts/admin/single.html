@@ -1,0 +1,11 @@
+{{ if eq .Layout "admin/login" }}
+{{ partial "admin/login.html" . }}
+{{ else if eq .Layout "admin/index" }}
+{{ partial "admin/index.html" . }}
+{{ else if eq .Layout "admin/documents" }}
+{{ partial "admin/documents.html" . }}
+{{ else if eq .Layout "admin/process" }}
+{{ partial "admin/process.html" . }}
+{{ else }}
+{{ partial "admin/index.html" . }}
+{{ end }}

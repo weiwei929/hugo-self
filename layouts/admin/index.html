@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Hugo-Self 管理后台</title>
+    {{ $adminCSS := resources.Get "css/extended/admin.css" | resources.Minify }}
+    <link rel="stylesheet" href="{{ $adminCSS.RelPermalink }}">
+</head>
+<body>
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 1rem;
+            }
+            
+            .header {
+                padding: 1rem;
+            }
+            
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Hugo-Self 管理后台</h1>
+        <div class="user-info">
+            <span>欢迎，<strong id="username">admin</strong></span>
+            <button class="logout-btn" onclick="logout()">退出登录</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- 统计信息 -->
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-number" id="totalPosts">3</div>
+                <div class="stat-label">已发布文章</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="draftPosts">0</div>
+                <div class="stat-label">草稿文章</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="pendingFiles">0</div>
+                <div class="stat-label">待处理文件</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="totalImages">0</div>
+                <div class="stat-label">图片资源</div>
+            </div>
+        </div>
+
+        <!-- 功能卡片 -->
+        <div class="dashboard-grid">
+            <div class="card">
+                <h3>📝 文档管理</h3>
+                <p>批量上传、处理和发布 Markdown 文档。支持从 Obsidian、Typora 等编辑器导入。</p>
+                <a href="/admin/documents/" class="btn">管理文档</a>
+            </div>
+
+            <div class="card">
+                <h3>🖼️ 图片管理</h3>
+                <p>上传、组织和管理博客图片资源。支持批量处理和格式优化。</p>
+                <a href="/admin/images/" class="btn">管理图片</a>
+            </div>
+
+            <div class="card">
+                <h3>⚙️ 网站设置</h3>
+                <p>配置网站标题、描述、菜单等基本设置。自定义主题和样式。</p>
+                <a href="/admin/settings/" class="btn btn-secondary">网站设置</a>
+            </div>
+
+            <div class="card">
+                <h3>🔍 内容预览</h3>
+                <p>预览网站效果，查看已发布内容。快速访问前台页面。</p>
+                <a href="/" target="_blank" class="btn btn-secondary">查看网站</a>
+            </div>
+        </div>
+
+        <!-- 最近文件 -->
+        <div class="recent-files">
+            <h3>最近文件</h3>
+            <ul class="file-list" id="recentFiles">
+                <li class="file-item">
+                    <div>
+                        <div class="file-name">欢迎使用 Hugo-Self 博客框架</div>
+                        <div class="file-date">2025-08-21</div>
+                    </div>
+                    <span class="status-badge status-published">已发布</span>
+                </li>
+                <li class="file-item">
+                    <div>
+                        <div class="file-name">Markdown 语法指南</div>
+                        <div class="file-date">2025-08-21</div>
+                    </div>
+                    <span class="status-badge status-published">已发布</span>
+                </li>
+                <li class="file-item">
+                    <div>
+                        <div class="file-name">Hugo 使用技巧和最佳实践</div>
+                        <div class="file-date">2025-08-21</div>
+                    </div>
+                    <span class="status-badge status-published">已发布</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        const AUTH_KEY = 'hugo_self_auth';
+
+        // 检查登录状态
+        function checkAuth() {
+            const auth = localStorage.getItem(AUTH_KEY);
+            if (!auth) {
+                window.location.href = '/admin/login/';
+                return false;
+            }
+
+            const authData = JSON.parse(auth);
+            if (Date.now() >= authData.expiry) {
+                localStorage.removeItem(AUTH_KEY);
+                window.location.href = '/admin/login/';
+                return false;
+            }
+
+            // 更新用户名显示
+            document.getElementById('username').textContent = authData.username;
+            return true;
+        }
+
+        // 退出登录
+        function logout() {
+            if (confirm('确定要退出登录吗？')) {
+                localStorage.removeItem(AUTH_KEY);
+                window.location.href = '/admin/login/';
+            }
+        }
+
+        // 页面加载时检查登录状态
+        document.addEventListener('DOMContentLoaded', function() {
+            if (!checkAuth()) {
+                return;
+            }
+
+            // 这里可以加载实际的统计数据
+            loadDashboardData();
+        });
+
+        // 加载仪表板数据
+        function loadDashboardData() {
+            // 这里可以通过API或其他方式加载实际数据
+            // 目前使用静态数据作为示例
+            console.log('Dashboard loaded');
+        }
+
+        // 定期检查登录状态
+        setInterval(checkAuth, 60000); // 每分钟检查一次
+    </script>
+</body>
+</html>

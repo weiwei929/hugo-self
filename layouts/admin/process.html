@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>文档处理 - Hugo-Self</title>
+    {{ $adminCSS := resources.Get "css/extended/admin.css" | resources.Minify }}
+    <link rel="stylesheet" href="{{ $adminCSS.RelPermalink }}">
+</head>
+<body>
+            background: #dc3545;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        .toolbar {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .toolbar .btn {
+            padding: 0.5rem 1rem;
+            font-size: 0.8rem;
+        }
+
+        .preview-content {
+            line-height: 1.6;
+        }
+
+        .preview-content h1,
+        .preview-content h2,
+        .preview-content h3,
+        .preview-content h4,
+        .preview-content h5,
+        .preview-content h6 {
+            margin-top: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        .preview-content p {
+            margin-bottom: 1rem;
+        }
+
+        .preview-content code {
+            background: #f8f9fa;
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+
+        .preview-content pre {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+
+        .preview-content blockquote {
+            border-left: 4px solid #667eea;
+            padding-left: 1rem;
+            margin: 1rem 0;
+            color: #666;
+            font-style: italic;
+        }
+
+        .image-upload {
+            border: 2px dashed #ccc;
+            border-radius: 5px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .image-upload:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+
+        .image-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .image-item {
+            position: relative;
+            border-radius: 5px;
+            overflow: hidden;
+            border: 2px solid #eee;
+        }
+
+        .image-item img {
+            width: 100%;
+            height: 100px;
+            object-fit: cover;
+        }
+
+        .image-item .image-actions {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 0.25rem;
+            display: flex;
+            gap: 0.25rem;
+        }
+
+        .image-actions button {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            padding: 0.25rem;
+            border-radius: 3px;
+        }
+
+        .image-actions button:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 0.5rem;
+        }
+
+        .status-pending { background: #ffc107; }
+        .status-processing { background: #007bff; }
+        .status-ready { background: #28a745; }
+
+        @media (max-width: 1024px) {
+            .process-layout {
+                grid-template-columns: 1fr;
+                height: auto;
+            }
+            
+            .container {
+                padding: 0 1rem;
+            }
+            
+            .header {
+                padding: 1rem;
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>文档处理</h1>
+        <div class="nav-links">
+            <a href="/admin/">仪表板</a>
+            <a href="/admin/documents/">文档管理</a>
+            <a href="/admin/images/">图片管理</a>
+            <button class="btn btn-danger" onclick="logout()">退出</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="process-layout">
+            <!-- 编辑面板 -->
+            <div class="editor-panel">
+                <div class="panel-header">
+                    <h3>📝 文档编辑</h3>
+                    <div>
+                        <span class="status-indicator status-pending" id="statusIndicator"></span>
+                        <span id="statusText">待处理</span>
+                    </div>
+                </div>
+                <div class="panel-content">
+                    <div class="toolbar">
+                        <button class="btn" onclick="autoProcess()">自动处理</button>
+                        <button class="btn btn-secondary" onclick="insertImage()">插入图片</button>
+                        <button class="btn btn-secondary" onclick="formatContent()">格式化</button>
+                    </div>
+
+                    <form id="documentForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="title">标题</label>
+                                <input type="text" id="title" name="title" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="date">发布日期</label>
+                                <input type="datetime-local" id="date" name="date" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="category">分类</label>
+                                <select id="category" name="category">
+                                    <option value="">选择分类</option>
+                                    <option value="技术">技术</option>
+                                    <option value="生活">生活</option>
+                                    <option value="教程">教程</option>
+                                    <option value="随笔">随笔</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="draft">状态</label>
+                                <select id="draft" name="draft">
+                                    <option value="false">发布</option>
+                                    <option value="true">草稿</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="tags">标签</label>
+                            <div class="tags-input" id="tagsInput">
+                                <input type="text" class="tag-input" placeholder="输入标签后按回车" onkeypress="handleTagInput(event)">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="description">描述</label>
+                            <input type="text" id="description" name="description" placeholder="文章简短描述，用于SEO和摘要">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="content">内容</label>
+                            <textarea id="content" name="content" placeholder="在此编辑 Markdown 内容..." oninput="updatePreview()"></textarea>
+                        </div>
+
+                        <!-- 图片上传区域 -->
+                        <div class="form-group">
+                            <label>图片管理</label>
+                            <div class="image-upload" onclick="document.getElementById('imageInput').click()">
+                                <p>📷 点击上传图片</p>
+                                <p class="text-small">支持 JPG, PNG, GIF 格式</p>
+                            </div>
+                            <input type="file" id="imageInput" style="display: none;" multiple accept="image/*" onchange="handleImageUpload(event)">
+                            <div class="image-gallery" id="imageGallery"></div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- 预览面板 -->
+            <div class="preview-panel">
+                <div class="panel-header">
+                    <h3>👁️ 实时预览</h3>
+                    <div>
+                        <button class="btn btn-success" onclick="saveDocument()">保存</button>
+                        <button class="btn" onclick="publishDocument()">发布</button>
+                    </div>
+                </div>
+                <div class="panel-content">
+                    <div class="preview-content" id="previewContent">
+                        <p class="text-muted">在左侧编辑内容，这里将显示预览效果...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 认证检查
+        const AUTH_KEY = 'hugo_self_auth';
+        
+        function checkAuth() {
+            const auth = localStorage.getItem(AUTH_KEY);
+            if (!auth) {
+                window.location.href = '/admin/login.html';
+                return false;
+            }
+            
+            const authData = JSON.parse(auth);
+            if (Date.now() >= authData.expiry) {
+                localStorage.removeItem(AUTH_KEY);
+                window.location.href = '/admin/login.html';
+                return false;
+            }
+            
+            return true;
+        }
+
+        function logout() {
+            if (confirm('确定要退出登录吗？')) {
+                localStorage.removeItem(AUTH_KEY);
+                window.location.href = '/admin/login.html';
+            }
+        }
+
+        // 文档处理功能
+        let currentDocument = null;
+        let documentImages = [];
+        let tags = [];
+
+        // 页面加载
+        document.addEventListener('DOMContentLoaded', function() {
+            if (!checkAuth()) return;
+            
+            loadDocument();
+            initializeEditor();
+        });
+
+        // 加载文档
+        function loadDocument() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const docId = urlParams.get('id');
+            
+            if (!docId) {
+                alert('未指定文档ID');
+                window.location.href = '/admin/documents/';
+                return;
+            }
+
+            const stored = localStorage.getItem('hugo_self_documents') || '[]';
+            const documents = JSON.parse(stored);
+            currentDocument = documents.find(d => d.id === docId);
+            
+            if (!currentDocument) {
+                alert('文档不存在');
+                window.location.href = '/admin/documents/';
+                return;
+            }
+
+            populateForm();
+        }
+
+        // 填充表单
+        function populateForm() {
+            document.getElementById('title').value = currentDocument.title || '';
+            document.getElementById('content').value = currentDocument.content || '';
+            
+            // 设置默认日期为当前时间
+            const now = new Date();
+            now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+            document.getElementById('date').value = now.toISOString().slice(0, 16);
+            
+            // 尝试从内容中提取信息
+            extractMetadata();
+            updatePreview();
+        }
+
+        // 提取元数据
+        function extractMetadata() {
+            const content = currentDocument.content;
+            
+            // 提取 Front Matter
+            const frontMatterMatch = content.match(/^---\s*\n([\s\S]*?)\n---/);
+            if (frontMatterMatch) {
+                const frontMatter = frontMatterMatch[1];
+                
+                // 提取标签
+                const tagsMatch = frontMatter.match(/tags:\s*\[(.*?)\]/);
+                if (tagsMatch) {
+                    const tagsList = tagsMatch[1].split(',').map(t => t.trim().replace(/['"]/g, ''));
+                    tagsList.forEach(tag => {
+                        if (tag) addTag(tag);
+                    });
+                }
+                
+                // 提取分类
+                const categoryMatch = frontMatter.match(/categories?:\s*\[(.*?)\]/);
+                if (categoryMatch) {
+                    const category = categoryMatch[1].replace(/['"]/g, '').trim();
+                    document.getElementById('category').value = category;
+                }
+                
+                // 提取描述
+                const descMatch = frontMatter.match(/description:\s*["']?([^"'\n]+)["']?/);
+                if (descMatch) {
+                    document.getElementById('description').value = descMatch[1].trim();
+                }
+            }
+        }
+
+        // 初始化编辑器
+        function initializeEditor() {
+            // 这里可以集成更高级的 Markdown 编辑器
+            // 比如 CodeMirror 或 Monaco Editor
+        }
+
+        // 标签处理
+        function handleTagInput(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                const input = event.target;
+                const tag = input.value.trim();
+                if (tag && !tags.includes(tag)) {
+                    addTag(tag);
+                    input.value = '';
+                }
+            }
+        }
+
+        function addTag(tag) {
+            tags.push(tag);
+            updateTagsDisplay();
+        }
+
+        function removeTag(tag) {
+            tags = tags.filter(t => t !== tag);
+            updateTagsDisplay();
+        }
+
+        function updateTagsDisplay() {
+            const container = document.getElementById('tagsInput');
+            const input = container.querySelector('.tag-input');
+            
+            // 清除现有标签
+            container.querySelectorAll('.tag').forEach(el => el.remove());
+            
+            // 添加标签
+            tags.forEach(tag => {
+                const tagEl = document.createElement('span');
+                tagEl.className = 'tag';
+                tagEl.innerHTML = `${tag} <span class="tag-remove" onclick="removeTag('${tag}')">&times;</span>`;
+                container.insertBefore(tagEl, input);
+            });
+        }
+
+        // 图片处理
+        function handleImageUpload(event) {
+            const files = event.target.files;
+            for (let file of files) {
+                if (file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const image = {
+                            id: 'img_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+                            name: file.name,
+                            data: e.target.result,
+                            size: file.size
+                        };
+                        documentImages.push(image);
+                        updateImageGallery();
+                    };
+                    reader.readAsDataURL(file);
+                }
+            }
+        }
+
+        function updateImageGallery() {
+            const gallery = document.getElementById('imageGallery');
+            gallery.innerHTML = documentImages.map(img => `
+                <div class="image-item">
+                    <img src="${img.data}" alt="${img.name}">
+                    <div class="image-actions">
+                        <button onclick="insertImageToContent('${img.id}')" title="插入到内容">📝</button>
+                        <button onclick="removeImage('${img.id}')" title="删除">🗑️</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function insertImageToContent(imageId) {
+            const image = documentImages.find(img => img.id === imageId);
+            if (image) {
+                const textarea = document.getElementById('content');
+                const imageMd = `![${image.name}](${image.data})\n\n`;
+                const cursorPos = textarea.selectionStart;
+                const textBefore = textarea.value.substring(0, cursorPos);
+                const textAfter = textarea.value.substring(cursorPos);
+                textarea.value = textBefore + imageMd + textAfter;
+                textarea.focus();
+                textarea.setSelectionRange(cursorPos + imageMd.length, cursorPos + imageMd.length);
+                updatePreview();
+            }
+        }
+
+        function removeImage(imageId) {
+            documentImages = documentImages.filter(img => img.id !== imageId);
+            updateImageGallery();
+        }
+
+        function insertImage() {
+            document.getElementById('imageInput').click();
+        }
+
+        // 自动处理
+        function autoProcess() {
+            // 自动生成描述
+            if (!document.getElementById('description').value) {
+                const content = document.getElementById('content').value;
+                const desc = generateDescription(content);
+                document.getElementById('description').value = desc;
+            }
+            
+            // 自动提取标签
+            if (tags.length === 0) {
+                const extractedTags = extractTags(document.getElementById('content').value);
+                extractedTags.forEach(tag => addTag(tag));
+            }
+            
+            // 格式化内容
+            formatContent();
+            
+            alert('自动处理完成！');
+        }
+
+        function generateDescription(content) {
+            // 移除 Front Matter 和标题
+            content = content.replace(/^---\s*\n[\s\S]*?\n---\s*\n/, '');
+            content = content.replace(/^#+\s+.+$/gm, '');
+            
+            // 获取前160个字符作为描述
+            const desc = content.trim().substring(0, 160);
+            return desc + (content.length > 160 ? '...' : '');
+        }
+
+        function extractTags(content) {
+            // 简单的标签提取逻辑
+            const commonTags = ['技术', '教程', '笔记', '总结', '分享', '经验'];
+            const extractedTags = [];
+            
+            commonTags.forEach(tag => {
+                if (content.includes(tag) && !tags.includes(tag)) {
+                    extractedTags.push(tag);
+                }
+            });
+            
+            return extractedTags.slice(0, 3); // 最多3个标签
+        }
+
+        function formatContent() {
+            const textarea = document.getElementById('content');
+            let content = textarea.value;
+            
+            // 基本格式化
+            content = content.replace(/\n{3,}/g, '\n\n'); // 移除多余空行
+            content = content.replace(/[ \t]+$/gm, ''); // 移除行尾空格
+            
+            textarea.value = content;
+            updatePreview();
+        }
+
+        // 预览更新
+        function updatePreview() {
+            const content = document.getElementById('content').value;
+            const previewDiv = document.getElementById('previewContent');
+            
+            // 简单的 Markdown 渲染（实际应用中应使用专业的 Markdown 解析器）
+            let html = content
+                .replace(/^### (.*$)/gim, '<h3>$1</h3>')
+                .replace(/^## (.*$)/gim, '<h2>$1</h2>')
+                .replace(/^# (.*$)/gim, '<h1>$1</h1>')
+                .replace(/\*\*(.*)\*\*/gim, '<strong>$1</strong>')
+                .replace(/\*(.*)\*/gim, '<em>$1</em>')
+                .replace(/`(.*?)`/gim, '<code>$1</code>')
+                .replace(/\n/gim, '<br>');
+            
+            previewDiv.innerHTML = html || '<p class="text-muted">在左侧编辑内容，这里将显示预览效果...</p>';
+        }
+
+        // 保存文档
+        function saveDocument() {
+            const formData = new FormData(document.getElementById('documentForm'));
+            
+            // 更新文档对象
+            currentDocument.title = formData.get('title');
+            currentDocument.content = formData.get('content');
+            currentDocument.status = 'ready';
+            currentDocument.processed_at = new Date().toISOString();
+            
+            // 生成 Front Matter
+            const frontMatter = generateFrontMatter(formData);
+            const contentWithFrontMatter = frontMatter + '\n\n' + formData.get('content');
+            currentDocument.processed_content = contentWithFrontMatter;
+            
+            // 保存到本地存储
+            const stored = localStorage.getItem('hugo_self_documents') || '[]';
+            const documents = JSON.parse(stored);
+            const index = documents.findIndex(d => d.id === currentDocument.id);
+            if (index !== -1) {
+                documents[index] = currentDocument;
+                localStorage.setItem('hugo_self_documents', JSON.stringify(documents));
+            }
+            
+            // 更新状态显示
+            updateStatus('ready', '待发布');
+            
+            alert('文档已保存！');
+        }
+
+        function generateFrontMatter(formData) {
+            const frontMatter = [
+                '---',
+                `title: "${formData.get('title')}"`,
+                `date: ${new Date(formData.get('date')).toISOString()}`,
+                `draft: ${formData.get('draft')}`,
+                `tags: [${tags.map(t => `"${t}"`).join(', ')}]`,
+                `categories: ["${formData.get('category')}"]`,
+                `description: "${formData.get('description')}"`,
+                'ShowToc: true',
+                'TocOpen: false',
+                '---'
+            ];
+            
+            return frontMatter.join('\n');
+        }
+
+        function updateStatus(status, text) {
+            const indicator = document.getElementById('statusIndicator');
+            const statusText = document.getElementById('statusText');
+            
+            indicator.className = `status-indicator status-${status}`;
+            statusText.textContent = text;
+        }
+
+        // 发布文档
+        function publishDocument() {
+            if (currentDocument.status !== 'ready') {
+                alert('请先保存文档！');
+                return;
+            }
+            
+            if (confirm('确定要发布这篇文档吗？')) {
+                // 这里应该调用发布API
+                currentDocument.status = 'published';
+                currentDocument.published_at = new Date().toISOString();
+                
+                // 更新存储
+                const stored = localStorage.getItem('hugo_self_documents') || '[]';
+                const documents = JSON.parse(stored);
+                const index = documents.findIndex(d => d.id === currentDocument.id);
+                if (index !== -1) {
+                    documents[index] = currentDocument;
+                    localStorage.setItem('hugo_self_documents', JSON.stringify(documents));
+                }
+                
+                alert('文档发布成功！');
+                window.location.href = '/admin/documents/';
+            }
+        }
+    </script>
+</body>
+</html>

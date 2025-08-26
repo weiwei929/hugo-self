@@ -1,0 +1,82 @@
+{{- $type := .Get 0 | default "info" -}}
+{{- $title := .Get 1 | default "注意" -}}
+
+<div class="note note-{{ $type }}">
+    <div class="note-title">
+        {{- if eq $type "info" -}}
+            ℹ️ {{ $title }}
+        {{- else if eq $type "warning" -}}
+            ⚠️ {{ $title }}
+        {{- else if eq $type "danger" -}}
+            ❌ {{ $title }}
+        {{- else if eq $type "success" -}}
+            ✅ {{ $title }}
+        {{- else -}}
+            📝 {{ $title }}
+        {{- end -}}
+    </div>
+    <div class="note-content">
+        {{ .Inner | markdownify }}
+    </div>
+</div>
+
+<style>
+.note {
+    padding: 1rem;
+    margin: 1.5rem 0;
+    border-radius: 6px;
+    border-left: 4px solid;
+    background: #f8f9fa;
+}
+
+.note-title {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+}
+
+.note-content {
+    color: #555;
+    line-height: 1.6;
+}
+
+.note-content p:last-child {
+    margin-bottom: 0;
+}
+
+.note-info {
+    border-color: #2196f3;
+    background: #e3f2fd;
+}
+
+.note-info .note-title {
+    color: #1976d2;
+}
+
+.note-warning {
+    border-color: #ff9800;
+    background: #fff3e0;
+}
+
+.note-warning .note-title {
+    color: #f57c00;
+}
+
+.note-danger {
+    border-color: #f44336;
+    background: #ffebee;
+}
+
+.note-danger .note-title {
+    color: #d32f2f;
+}
+
+.note-success {
+    border-color: #4caf50;
+    background: #e8f5e8;
+}
+
+.note-success .note-title {
+    color: #388e3c;
+}
+</style>

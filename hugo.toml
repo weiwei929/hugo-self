@@ -1,0 +1,160 @@
+baseURL = "http://localhost:8000"
+languageCode = "zh-cn"
+title = "Hugo-Self 博客"
+# theme = "PaperMod"  # 注释掉，因为这个项目本身就是主题
+
+# 启用 emoji 支持
+enableEmoji = true
+# 启用 Git 信息
+enableGitInfo = true
+# 构建草稿
+buildDrafts = false
+# 构建过期内容
+buildExpired = false
+# 构建未来内容
+buildFuture = false
+
+# 分页设置
+[pagination]
+  pagerSize = 10
+
+# 代码高亮设置
+[markup]
+  [markup.highlight]
+    style = "github"
+    lineNos = true
+    lineNumbersInTable = false
+    noClasses = false
+    anchorLineNos = false
+    codeFences = true
+    guessSyntax = true
+    hl_Lines = ""
+    tabWidth = 4
+
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
+
+# 菜单配置
+[menu]
+  [[menu.main]]
+    identifier = "home"
+    name = "首页"
+    url = "/"
+    weight = 10
+
+  [[menu.main]]
+    identifier = "archives"
+    name = "归档"
+    url = "/archives/"
+    weight = 20
+
+  [[menu.main]]
+    identifier = "tags"
+    name = "标签"
+    url = "/tags/"
+    weight = 30
+
+  [[menu.main]]
+    identifier = "categories"
+    name = "分类"
+    url = "/categories/"
+    weight = 40
+
+  [[menu.main]]
+    identifier = "search"
+    name = "搜索"
+    url = "/search/"
+    weight = 50
+
+# 主题参数
+[params]
+  # 环境设置
+  env = "production"
+  
+  # 网站描述
+  description = "专注于内容展示的精简博客框架"
+  keywords = ["博客", "Hugo", "PaperMod", "精简"]
+  author = "Hugo-Self"
+  
+  # 默认主题 (auto, light, dark)
+  defaultTheme = "auto"
+  
+  # 禁用主题切换
+  disableThemeToggle = false
+  
+  # 显示阅读时间
+  ShowReadingTime = true
+  
+  # 显示分享按钮 (已精简，设为false)
+  ShowShareButtons = false
+  
+  # 显示文章导航
+  ShowPostNavLinks = true
+  
+  # 显示面包屑
+  ShowBreadCrumbs = true
+  
+  # 显示代码复制按钮
+  ShowCodeCopyButtons = true
+  
+  # 显示目录
+  ShowToc = true
+  
+  # 目录默认展开
+  TocOpen = false
+  
+  # 显示编辑链接
+  ShowEditPost = false
+  
+  # 显示全文内容
+  ShowFullTextinRSS = true
+  
+  # 首页信息
+  [params.homeInfoParams]
+    Title = "欢迎来到 Hugo-Self 博客"
+    Content = "这是一个专注于内容展示的精简博客框架，基于 Hugo PaperMod 主题精简而来。"
+
+  # 搜索配置
+  [params.fuseOpts]
+    isCaseSensitive = false
+    shouldSort = true
+    location = 0
+    distance = 1000
+    threshold = 0.4
+    minMatchCharLength = 0
+    keys = ["title", "permalink", "summary", "content"]
+
+# 输出格式
+[outputs]
+  home = ["HTML", "RSS", "JSON"]
+  page = ["HTML"]
+  section = ["HTML", "RSS"]
+  taxonomy = ["HTML", "RSS"]
+  term = ["HTML", "RSS"]
+
+# 隐私设置
+[privacy]
+  [privacy.vimeo]
+    disabled = false
+    simple = true
+
+  [privacy.x]
+    disabled = false
+    enableDNT = true
+    simple = true
+
+  [privacy.instagram]
+    disabled = false
+    simple = true
+
+  [privacy.youtube]
+    disabled = false
+    privacyEnhanced = true
+
+# 服务设置
+[services]
+  [services.instagram]
+    disableInlineCSS = true
+  [services.x]
+    disableInlineCSS = true
