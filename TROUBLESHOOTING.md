@@ -37,7 +37,7 @@ python scripts/start_separated.py
 start_hugo_only.bat
 
 # 方法2：手动启动
-hugo server -D --bind 0.0.0.0 --port 1313 --verbose
+hugo server -D --bind 0.0.0.0 --port 8000 --verbose
 ```
 
 **检查步骤**：
@@ -50,10 +50,10 @@ hugo server -D --bind 0.0.0.0 --port 1313 --verbose
 **检查端口占用**：
 ```bash
 # Windows
-netstat -ano | findstr :1313
+netstat -ano | findstr :8000
 
 # 如果端口被占用，使用其他端口
-hugo server -D --port 1314
+hugo server -D --port 8001
 ```
 
 #### 3. 防火墙阻止
@@ -67,7 +67,7 @@ hugo server -D --port 1314
 
 **检查 hugo.toml**：
 ```toml
-baseURL = "http://localhost:1313"  # 确保使用正确的本地地址
+baseURL = "http://localhost:8000"  # 确保使用正确的本地地址
 languageCode = "zh-cn"
 title = "Hugo-Self 博客"
 # theme = "PaperMod"  # 确保已注释掉
@@ -186,8 +186,8 @@ hugo server -D --verbose
 ### 3. 测试页面访问
 
 1. 启动Hugo服务器
-2. 访问测试页面：http://localhost:1313/test/
-3. 如果测试页面正常，再访问：http://localhost:1313/admin/login/
+2. 访问测试页面：http://localhost:8000/test/
+3. 如果测试页面正常，再访问：http://localhost:8080/login/
 
 ### 4. 检查日志
 
@@ -232,7 +232,7 @@ Hugo服务器会在控制台输出详细日志，注意查看：
 ```bash
 # 一键重置和启动
 hugo --cleanDestinationDir
-hugo server -D --bind 0.0.0.0 --port 1313 --verbose
+hugo server -D --bind 0.0.0.0 --port 8000 --verbose
 ```
 
 如果仍然无法解决，请尝试使用最简单的方式：
@@ -242,4 +242,4 @@ hugo server -D --bind 0.0.0.0 --port 1313 --verbose
 hugo server -D
 ```
 
-然后访问：http://localhost:1313/admin/login/
+然后访问：http://localhost:8080/login/

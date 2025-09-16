@@ -103,8 +103,9 @@ python3 scripts/start_admin.py
 ```
 
 这将自动启动：
-- Hugo 开发服务器 (http://localhost:1313)
-- 管理后台 API (http://localhost:8081)
+- Hugo 开发服务器 (http://localhost:8000)
+- 管理后台 (http://localhost:8080)
+- API 服务器 (http://localhost:8081)
 - 自动打开管理登录页面
 
 ### 方法二：手动启动
@@ -119,12 +120,12 @@ hugo server
 
 ### 2. 访问网站
 
-**前台网站**：http://localhost:1313
+**前台网站**：http://localhost:8000
 - 首页欢迎信息
 - 3篇示例文章
 - 导航菜单（首页、归档、标签、分类、搜索）
 
-**管理后台**：http://localhost:1313/admin/login/
+**管理后台**：http://localhost:8080/login/
 - 用户名：`admin`
 - 密码：`CHENpengfei186`
 
@@ -147,7 +148,7 @@ hugo server
 
 ### 1. 登录管理后台
 
-访问 http://localhost:1313/admin/login/
+访问 http://localhost:8080/login/
 - 用户名：`admin`
 - 密码：`CHENpengfei186`
 
@@ -333,7 +334,7 @@ server {
 A: 确保 Hugo 已正确安装并添加到 PATH 环境变量。
 
 ### Q: 网站无法访问？
-A: 检查防火墙设置，确保 1313 端口未被占用。
+A: 检查防火墙设置，确保 8000、8080、8081 端口未被占用。
 
 ### Q: 文章不显示？
 A: 检查文章的 `draft` 状态，确保为 `false` 或使用 `-D` 参数。

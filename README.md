@@ -77,7 +77,7 @@ hugo server -D
 hugo server
 ```
 
-访问 http://localhost:1313 查看效果
+访问 http://localhost:8000 查看效果
 
 ### 4. 启动管理后台
 
@@ -90,8 +90,9 @@ python3 scripts/start_admin.py
 ```
 
 这将启动：
-- Hugo 开发服务器 (http://localhost:1313)
-- 管理后台 (http://localhost:1313/admin/login/)
+- Hugo 开发服务器 (http://localhost:8000)
+- 管理后台 (http://localhost:8080/login/)
+- API 服务器 (http://localhost:8081)
 - 登录信息：admin / CHENpengfei186
 
 ### 5. 创建内容

@@ -62,8 +62,8 @@ yourdomain.com {
     }
 }
 
-# 开发环境配置（可选）
-localhost:8080 {
+# 开发环境配置（可选）- Hugo静态站点
+localhost:8000 {
     root * ./public
     file_server
     encode gzip

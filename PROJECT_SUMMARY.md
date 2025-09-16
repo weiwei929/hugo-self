@@ -51,8 +51,8 @@ python3 scripts/start_admin.py
 
 ### 访问地址
 
-- **管理后台**：http://localhost:1313/admin/login/
-- **网站前台**：http://localhost:1313/
+- **网站前台**：http://localhost:8000/
+- **管理后台**：http://localhost:8080/login/
 - **API 服务**：http://localhost:8081/
 
 ### 登录信息
