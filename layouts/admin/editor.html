@@ -1,0 +1,1022 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Hugo-Self Markdown编辑器</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f5f7fa;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background: white;
+            border-bottom: 1px solid #e1e8ed;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            color: #1a202c;
+            font-size: 1.5em;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9em;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background-color: #4f46e5;
+            color: white;
+        }
+
+        .btn-secondary {
+            background-color: #6b7280;
+            color: white;
+        }
+
+        .btn-success {
+            background-color: #10b981;
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            gap: 1rem;
+            padding: 1rem;
+            overflow: hidden;
+        }
+
+        .sidebar {
+            width: 280px;
+            background: white;
+            border-radius: 8px;
+            padding: 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            overflow-y: auto;
+        }
+
+        .editor-area {
+            flex: 1;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .editor-toolbar {
+            padding: 1rem;
+            border-bottom: 1px solid #e1e8ed;
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .toolbar-btn {
+            padding: 0.25rem 0.5rem;
+            border: 1px solid #d1d5db;
+            background: white;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8em;
+            transition: all 0.2s;
+        }
+
+        .toolbar-btn:hover {
+            background-color: #f3f4f6;
+        }
+
+        .editor-container {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+        }
+
+        .editor-pane, .preview-pane {
+            flex: 1;
+            overflow: auto;
+        }
+
+        .editor-pane {
+            border-right: 1px solid #e1e8ed;
+        }
+
+        #markdown-editor {
+            width: 100%;
+            height: 100%;
+            border: none;
+            padding: 1rem;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            resize: none;
+            outline: none;
+        }
+
+        .preview-pane {
+            padding: 1rem;
+            background-color: #fafbfc;
+        }
+
+        .file-item {
+            padding: 0.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-bottom: 0.25rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid transparent;
+        }
+
+        .file-item:hover {
+            background-color: #f3f4f6;
+        }
+
+        .file-item.active {
+            background-color: #dbeafe;
+            border-color: #3b82f6;
+        }
+
+        .file-name {
+            font-size: 0.9em;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        .status-badge {
+            font-size: 0.7em;
+            padding: 0.2rem 0.4rem;
+            border-radius: 12px;
+            background-color: #e5e7eb;
+            color: #374151;
+        }
+
+        .status-badge.published {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+
+        .status-badge.draft {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+
+        .upload-area {
+            border: 2px dashed #d1d5db;
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            margin-bottom: 1rem;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .upload-area:hover, .upload-area.dragover {
+            border-color: #3b82f6;
+            background-color: #f0f9ff;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            min-width: 400px;
+            max-width: 90%;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+
+        .form-group textarea {
+            height: 80px;
+            resize: vertical;
+        }
+
+        .tag-input {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.25rem;
+            padding: 0.5rem;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            min-height: 38px;
+        }
+
+        .tag {
+            background-color: #3b82f6;
+            color: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.8em;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .tag-remove {
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: 200px;
+            }
+            
+            .editor-container {
+                flex-direction: column;
+            }
+            
+            .editor-pane {
+                border-right: none;
+                border-bottom: 1px solid #e1e8ed;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 头部 -->
+    <div class="header">
+        <h1>📝 Markdown编辑器</h1>
+        <div class="header-actions">
+            <button class="btn btn-secondary" onclick="showMetadataModal()">📋 元数据</button>
+            <button class="btn btn-primary" onclick="saveDocument()">💾 保存</button>
+            <button class="btn btn-success" onclick="publishDocument()">🚀 发布</button>
+            <button class="btn btn-secondary" onclick="logout()">🚪 退出</button>
+            <a href="/admin/" class="btn btn-secondary">← 返回</a>
+        </div>
+    </div>
+
+    <!-- 主要内容区 -->
+    <div class="main-content">
+        <!-- 侧边栏 -->
+        <div class="sidebar">
+            <h3>📁 文档列表</h3>
+            
+            <!-- 删除这两行 -->
+            <!-- 添加创建新文档按钮 -->
+            <button class="btn btn-primary" onclick="createNewDocument()" style="width: 100%; margin-bottom: 1rem;">📝 创建新文档</button>
+            
+            <!-- 文件上传区 -->
+            <div class="upload-area" onclick="document.getElementById('file-upload').click()">
+                <p>📤 点击或拖拽上传文件</p>
+                <p style="font-size: 0.8em; color: #6b7280;">支持 .md, .markdown, .txt</p>
+                <div id="upload-progress" style="display: none; margin-top: 0.5rem;">
+                    <div style="background: #e5e7eb; border-radius: 4px; height: 4px; overflow: hidden;">
+                        <div id="progress-bar" style="background: #3b82f6; height: 100%; width: 0%; transition: width 0.3s;"></div>
+                    </div>
+                    <p id="upload-status" style="font-size: 0.7em; color: #4b5563; margin-top: 0.25rem;">上传中...</p>
+                </div>
+            </div>
+            <input type="file" id="file-upload" multiple accept=".md,.markdown,.txt" style="display: none;">
+
+            <!-- 文档列表 -->
+            <div id="document-list">
+                <!-- 动态加载文档列表 -->
+            </div>
+        </div>
+
+        <!-- 编辑器区域 -->
+        <div class="editor-area">
+            <!-- 工具栏 -->
+            <div class="editor-toolbar">
+                <button class="toolbar-btn" onclick="insertText('# ')" title="标题">H1</button>
+                <button class="toolbar-btn" onclick="insertText('## ')" title="副标题">H2</button>
+                <button class="toolbar-btn" onclick="insertText('**', '**')" title="粗体">B</button>
+                <button class="toolbar-btn" onclick="insertText('*', '*')" title="斜体">I</button>
+                <button class="toolbar-btn" onclick="insertText('`', '`')" title="代码">Code</button>
+                <button class="toolbar-btn" onclick="insertText('[', ']()')" title="链接">🔗</button>
+                <button class="toolbar-btn" onclick="showImageModal()" title="插入图片">🖼️</button>
+                <button class="toolbar-btn" onclick="insertText('- ')" title="列表">List</button>
+                <button class="toolbar-btn" onclick="insertText('> ')" title="引用">Quote</button>
+                <button class="toolbar-btn" onclick="togglePreview()" title="切换预览">👁️</button>
+            </div>
+
+            <!-- 编辑器容器 -->
+            <div class="editor-container">
+                <div class="editor-pane">
+                    <textarea id="markdown-editor" placeholder="在此输入Markdown内容..."></textarea>
+                </div>
+                <div class="preview-pane" id="preview-pane">
+                    <p style="color: #6b7280;">预览将在这里显示...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 元数据模态框 -->
+    <div id="metadata-modal" class="modal">
+        <div class="modal-content">
+            <h3>📋 文档元数据</h3>
+            <form id="metadata-form">
+                <div class="form-group">
+                    <label for="doc-title">标题</label>
+                    <input type="text" id="doc-title" required>
+                </div>
+                <div class="form-group">
+                    <label for="doc-description">描述</label>
+                    <textarea id="doc-description"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="doc-tags">标签</label>
+                    <div class="tag-input" id="tag-input">
+                        <input type="text" id="tag-input-field" placeholder="输入标签后按回车">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="doc-category">分类</label>
+                    <select id="doc-category">
+                        <option value="">选择分类</option>
+                        <option value="技术">技术</option>
+                        <option value="生活">生活</option>
+                        <option value="思考">思考</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="doc-draft"> 保存为草稿
+                    </label>
+                </div>
+                <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('metadata-modal')">取消</button>
+                    <button type="submit" class="btn btn-primary">保存元数据</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 图片插入模态框 -->
+    <div id="image-modal" class="modal">
+        <div class="modal-content">
+            <h3>🖼️ 插入图片</h3>
+            <form id="image-form">
+                <div class="form-group">
+                    <label>选择图片文件</label>
+                    <input type="file" id="image-upload" accept="image/*">
+                </div>
+                <div class="form-group">
+                    <label for="image-alt">图片描述</label>
+                    <input type="text" id="image-alt" placeholder="图片的替代文字">
+                </div>
+                <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('image-modal')">取消</button>
+                    <button type="submit" class="btn btn-primary">插入图片</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // 全局变量
+        let currentDocument = null;
+        let documents = [];
+        let isPreviewMode = false;
+        const API_BASE = 'http://localhost:8081'; // API服务器地址（修复为8081端口）
+        const AUTH_KEY = 'hugo_self_auth';
+
+        // 检查登录状态
+        function checkAuth() {
+            const auth = localStorage.getItem(AUTH_KEY);
+            if (!auth) {
+                redirectToLogin();
+                return false;
+            }
+
+            try {
+                const authData = JSON.parse(auth);
+                if (Date.now() >= authData.expiry) {
+                    logout(false); // 静默退出
+                    return false;
+                }
+                return true;
+            } catch (e) {
+                localStorage.removeItem(AUTH_KEY);
+                redirectToLogin();
+                return false;
+            }
+        }
+
+        // 重定向到登录页面
+        function redirectToLogin() {
+            const overlay = document.createElement('div');
+            overlay.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.8);
+                color: white;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 1.2em;
+                z-index: 10000;
+            `;
+            overlay.innerHTML = '<div>登录已过期，正在跳转到登录页面...</div>';
+            document.body.appendChild(overlay);
+            
+            setTimeout(() => {
+                window.location.href = '/login/';
+            }, 1500);
+        }
+
+        // 退出登录
+        function logout(showConfirm = true) {
+            if (showConfirm && !confirm('确定要退出登录吗？未保存的内容将会丢失！')) {
+                return;
+            }
+            
+            // 清除所有认证相关数据
+            localStorage.removeItem(AUTH_KEY);
+            sessionStorage.clear();
+            
+            // 显示退出成功信息
+            const overlay = document.createElement('div');
+            overlay.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(76, 175, 80, 0.9);
+                color: white;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 1.5em;
+                z-index: 10000;
+            `;
+            overlay.innerHTML = '<div>✅ 已安全退出，正在跳转...</div>';
+            document.body.appendChild(overlay);
+            
+            setTimeout(() => {
+                window.location.href = '/login/';
+            }, 1500);
+        }
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 检查登录状态
+            if (!checkAuth()) {
+                return;
+            }
+            
+            loadDocuments();
+            setupEventListeners();
+            
+            // 自动保存
+            setInterval(autoSave, 30000); // 每30秒自动保存
+            
+            // 定期检查登录状态
+            setInterval(checkAuth, 60000); // 每分钟检查一次
+        });
+
+        // 设置事件监听器
+        function setupEventListeners() {
+            // 文件上传
+            document.getElementById('file-upload').addEventListener('change', handleFileUpload);
+            
+            // 编辑器内容变化
+            document.getElementById('markdown-editor').addEventListener('input', function() {
+                if (!isPreviewMode) {
+                    updatePreview();
+                }
+            });
+
+            // 拖拽上传
+            const uploadArea = document.querySelector('.upload-area');
+            uploadArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadArea.classList.add('dragover');
+            });
+            
+            uploadArea.addEventListener('dragleave', () => {
+                uploadArea.classList.remove('dragover');
+            });
+            
+            uploadArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadArea.classList.remove('dragover');
+                const files = e.dataTransfer.files;
+                handleFiles(files);
+            });
+
+            // 标签输入
+            document.getElementById('tag-input-field').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    addTag(this.value.trim());
+                    this.value = '';
+                }
+            });
+
+            // 元数据表单提交
+            document.getElementById('metadata-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                saveMetadata();
+                closeModal('metadata-modal');
+            });
+
+            // 图片表单提交
+            document.getElementById('image-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                insertImage();
+                closeModal('image-modal');
+            });
+        }
+
+        // 加载文档列表
+        async function loadDocuments() {
+            try {
+                const response = await fetch(`${API_BASE}/api/documents`);
+                const result = await response.json();
+                
+                if (result.success) {
+                    documents = result.data;
+                    renderDocumentList();
+                    // 自动选择第一个文档
+                    if (documents.length > 0) {
+                        loadDocument(documents[0]);
+                    }
+                } else {
+                    console.error('加载文档失败:', result.error);
+                    // 使用模拟数据
+                    documents = [
+                        { id: 'demo1', title: '欢迎使用Hugo-Self', status: 'published', content: '# 欢迎使用Hugo-Self\n\n这是一个示例文档。' },
+                        { id: 'demo2', title: '新建文档', status: 'draft', content: '# 新建文档\n\n开始编写您的内容...' }
+                    ];
+                    renderDocumentList();
+                    // 自动选择第一个文档
+                    if (documents.length > 0) {
+                        loadDocument(documents[0]);
+                    }
+                }
+            } catch (error) {
+                console.error('加载文档失败:', error);
+                // 使用模拟数据
+                documents = [
+                    { id: 'demo1', title: '欢迎使用Hugo-Self', status: 'published', content: '# 欢迎使用Hugo-Self\n\n这是一个示例文档。' },
+                    { id: 'demo2', title: '新建文档', status: 'draft', content: '# 新建文档\n\n开始编写您的内容...' }
+                ];
+                renderDocumentList();
+                // 自动选择第一个文档
+                if (documents.length > 0) {
+                    loadDocument(documents[0]);
+                }
+            }
+        }
+
+        // 渲染文档列表
+        function renderDocumentList() {
+            const listElement = document.getElementById('document-list');
+            listElement.innerHTML = '';
+
+            documents.forEach(doc => {
+                const item = document.createElement('div');
+                item.className = 'file-item';
+                if (currentDocument && currentDocument.id === doc.id) {
+                    item.classList.add('active');
+                }
+                
+                item.innerHTML = `
+                    <div class="file-name" title="${doc.title}">${doc.title}</div>
+                    <span class="status-badge ${doc.status}">${doc.status === 'published' ? '已发布' : '草稿'}</span>
+                `;
+                
+                item.addEventListener('click', () => loadDocument(doc));
+                listElement.appendChild(item);
+            });
+        }
+
+        // 加载文档
+        function loadDocument(doc) {
+            currentDocument = doc;
+            document.getElementById('markdown-editor').value = doc.content || '';
+            updatePreview();
+            renderDocumentList(); // 更新选中状态
+        }
+
+        // 处理文件上传
+        function handleFileUpload(event) {
+            const files = event.target.files;
+            handleFiles(files);
+        }
+
+        // 处理文件
+        async function handleFiles(files) {
+            if (files.length === 0) return;
+            
+            const progressDiv = document.getElementById('upload-progress');
+            const progressBar = document.getElementById('progress-bar');
+            const statusText = document.getElementById('upload-status');
+            
+            // 显示上传进度
+            progressDiv.style.display = 'block';
+            
+            let successCount = 0;
+            let errorCount = 0;
+            
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                const progress = ((i + 1) / files.length) * 100;
+                
+                progressBar.style.width = progress + '%';
+                statusText.textContent = `正在处理: ${file.name} (${i + 1}/${files.length})`;
+                
+                if (file.type === 'text/markdown' || file.type === 'text/plain' || file.name.endsWith('.md')) {
+                    try {
+                        const content = await file.text();
+                        
+                        // 通过API导入文档
+                        const response = await fetch(`${API_BASE}/api/documents/import`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                filename: file.name,
+                                content: content
+                            })
+                        });
+                        
+                        const result = await response.json();
+                        
+                        if (result.success) {
+                            successCount++;
+                            console.log(`文档 "${file.name}" 上传成功`);
+                        } else {
+                            errorCount++;
+                            console.error(`文档 "${file.name}" 上传失败: ${result.error}`);
+                        }
+                    } catch (error) {
+                        errorCount++;
+                        console.error('文件上传失败:', error);
+                    }
+                } else {
+                    errorCount++;
+                    console.warn(`不支持的文件类型: ${file.name}`);
+                }
+            }
+            
+            // 完成后显示结果
+            progressBar.style.width = '100%';
+            if (errorCount === 0) {
+                statusText.textContent = `✅ 所有文件上传成功! (成功: ${successCount}个)`;
+                statusText.style.color = '#065f46';
+            } else if (successCount === 0) {
+                statusText.textContent = `❌ 所有文件上传失败! (失败: ${errorCount}个)`;
+                statusText.style.color = '#dc2626';
+            } else {
+                statusText.textContent = `⚠️ 部分成功 (成功: ${successCount}个, 失败: ${errorCount}个)`;
+                statusText.style.color = '#d97706';
+            }
+            
+            // 重新加载文档列表
+            if (successCount > 0) {
+                await loadDocuments();
+            }
+            
+            // 3秒后隐藏进度条
+            setTimeout(() => {
+                progressDiv.style.display = 'none';
+                progressBar.style.width = '0%';
+                statusText.style.color = '#4b5563';
+            }, 3000);
+            
+            // 清空文件输入
+            document.getElementById('file-upload').value = '';
+        }
+
+        // 更新预览
+        function updatePreview() {
+            const content = document.getElementById('markdown-editor').value;
+            const preview = document.getElementById('preview-pane');
+            
+            // 简单的Markdown转HTML (实际项目中建议使用专门的库)
+            let html = content
+                .replace(/^# (.*$)/gim, '<h1>$1</h1>')
+                .replace(/^## (.*$)/gim, '<h2>$1</h2>')
+                .replace(/^### (.*$)/gim, '<h3>$1</h3>')
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                .replace(/`(.*?)`/g, '<code>$1</code>')
+                .replace(/\n\n/g, '</p><p>')
+                .replace(/\n/g, '<br>');
+            
+            if (html) {
+                preview.innerHTML = '<p>' + html + '</p>';
+            } else {
+                preview.innerHTML = '<p style="color: #6b7280;">预览将在这里显示...</p>';
+            }
+        }
+
+        // 插入文本
+        function insertText(before, after = '') {
+            const editor = document.getElementById('markdown-editor');
+            const start = editor.selectionStart;
+            const end = editor.selectionEnd;
+            const selectedText = editor.value.substring(start, end);
+            
+            const newText = before + selectedText + after;
+            editor.value = editor.value.substring(0, start) + newText + editor.value.substring(end);
+            
+            // 设置光标位置
+            const newCursorPos = start + before.length + selectedText.length;
+            editor.setSelectionRange(newCursorPos, newCursorPos);
+            editor.focus();
+            
+            updatePreview();
+        }
+
+        // 切换预览模式
+        function togglePreview() {
+            isPreviewMode = !isPreviewMode;
+            const editorPane = document.querySelector('.editor-pane');
+            const previewPane = document.querySelector('.preview-pane');
+            
+            if (isPreviewMode) {
+                editorPane.style.display = 'none';
+                previewPane.style.flex = '1';
+            } else {
+                editorPane.style.display = 'block';
+                previewPane.style.flex = '1';
+            }
+        }
+
+        // 显示模态框
+        function showModal(modalId) {
+            document.getElementById(modalId).style.display = 'block';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        function showMetadataModal() {
+            if (currentDocument) {
+                document.getElementById('doc-title').value = currentDocument.title || '';
+                document.getElementById('doc-description').value = currentDocument.description || '';
+                // 加载标签和分类...
+            }
+            showModal('metadata-modal');
+        }
+
+        function showImageModal() {
+            showModal('image-modal');
+        }
+
+        // 添加标签
+        function addTag(tagName) {
+            if (tagName && !document.querySelector(`[data-tag="${tagName}"]`)) {
+                const tagInput = document.getElementById('tag-input');
+                const inputField = document.getElementById('tag-input-field');
+                
+                const tag = document.createElement('span');
+                tag.className = 'tag';
+                tag.setAttribute('data-tag', tagName);
+                tag.innerHTML = `${tagName} <span class="tag-remove" onclick="removeTag('${tagName}')">×</span>`;
+                
+                tagInput.insertBefore(tag, inputField);
+            }
+        }
+
+        // 移除标签
+        function removeTag(tagName) {
+            const tag = document.querySelector(`[data-tag="${tagName}"]`);
+            if (tag) {
+                tag.remove();
+            }
+        }
+
+        // 保存元数据
+        function saveMetadata() {
+            if (currentDocument) {
+                currentDocument.title = document.getElementById('doc-title').value;
+                currentDocument.description = document.getElementById('doc-description').value;
+                currentDocument.category = document.getElementById('doc-category').value;
+                currentDocument.draft = document.getElementById('doc-draft').checked;
+                
+                // 收集标签
+                const tags = Array.from(document.querySelectorAll('.tag')).map(tag => 
+                    tag.getAttribute('data-tag')
+                );
+                currentDocument.tags = tags;
+                
+                renderDocumentList();
+                console.log('元数据已保存');
+            }
+        }
+
+        // 插入图片
+        function insertImage() {
+            const file = document.getElementById('image-upload').files[0];
+            const alt = document.getElementById('image-alt').value;
+            
+            if (file) {
+                // 这里应该上传图片到服务器
+                // 目前使用占位符
+                const imagePath = `/images/${file.name}`;
+                const markdown = `![${alt}](${imagePath})`;
+                insertText(markdown);
+                
+                // 重置表单
+                document.getElementById('image-form').reset();
+            }
+        }
+
+        // 保存文档
+        async function saveDocument() {
+            if (currentDocument) {
+                try {
+                    const content = document.getElementById('markdown-editor').value;
+                    const data = {
+                        id: currentDocument.id,
+                        title: currentDocument.title,
+                        content: content
+                    };
+                    
+                    const response = await fetch(`${API_BASE}/api/documents/save`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(data)
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        currentDocument = result.data;
+                        alert('文档保存成功！');
+                        loadDocuments();
+                    } else {
+                        alert('保存失败：' + result.error);
+                    }
+                } catch (error) {
+                    console.error('保存文档失败:', error);
+                    alert('保存失败，请检查网络连接');
+                }
+            } else {
+                alert('请先选择或创建文档');
+            }
+        }
+
+        // 发布文档
+        async function publishDocument() {
+            if (currentDocument) {
+                try {
+                    await saveDocument(); // 先保存
+                    
+                    const response = await fetch(`${API_BASE}/api/documents/publish`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ id: currentDocument.id })
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        currentDocument = result.data;
+                        alert('文档发布成功！');
+                        renderDocumentList();
+                    } else {
+                        alert('发布失败：' + result.error);
+                    }
+                } catch (error) {
+                    console.error('发布文档失败:', error);
+                    alert('发布失败，请检查网络连接');
+                }
+            } else {
+                alert('请先选择文档');
+            }
+        }
+
+        // 自动保存
+        function autoSave() {
+            if (currentDocument && document.getElementById('markdown-editor').value) {
+                currentDocument.content = document.getElementById('markdown-editor').value;
+                console.log('自动保存完成');
+            }
+        }
+
+        // 创建新文档
+        function createNewDocument() {
+            const newDoc = {
+                id: 'new_' + Date.now(),
+                title: '新建文档',
+                status: 'draft',
+                content: '# 新建文档\n\n开始编写您的内容...'
+            };
+            
+            currentDocument = newDoc;
+            document.getElementById('markdown-editor').value = newDoc.content;
+            updatePreview();
+            
+            // 添加到文档列表
+            documents.unshift(newDoc);
+            renderDocumentList();
+        }
+
+        // 点击模态框外部关闭
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
+
+// 删除整个函数
+// 创建新文档
+function createNewDocument() {
+    const newDoc = {
+        id: 'new_' + Date.now(),
+        title: '新建文档',
+        status: 'draft',
+        content: '# 新建文档\n\n开始编写您的内容...'
+    };
+    
+    currentDocument = newDoc;
+    document.getElementById('markdown-editor').value = newDoc.content;
+    updatePreview();
+    
+    // 添加到文档列表
+    documents.unshift(newDoc);
+    renderDocumentList();
+}

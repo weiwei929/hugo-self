@@ -1,11 +1,15 @@
-{{ if eq .Layout "admin/login" }}
-{{ partial "admin/login.html" . }}
-{{ else if eq .Layout "admin/index" }}
-{{ partial "admin/index.html" . }}
-{{ else if eq .Layout "admin/documents" }}
-{{ partial "admin/documents.html" . }}
-{{ else if eq .Layout "admin/process" }}
-{{ partial "admin/process.html" . }}
-{{ else }}
-{{ partial "admin/index.html" . }}
-{{ end }}
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>重定向 - Hugo-Self 管理后台</title>
+</head>
+<body>
+    <script>
+        // 自动重定向到管理后台
+        window.location.href = '/admin/';
+    </script>
+    <p>正在跳转到管理后台...</p>
+</body>
+</html>

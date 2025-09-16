@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>教程 on Hugo-Self 博客</title>
+    <link>http://localhost:8000/tags/%E6%95%99%E7%A8%8B/</link>
+    <description>Recent content in 教程 on Hugo-Self 博客</description>
+    <generator>Hugo -- 0.148.2</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Tue, 26 Aug 2025 08:58:21 +0800</lastBuildDate>
+    <atom:link href="http://localhost:8000/tags/%E6%95%99%E7%A8%8B/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>欢迎使用 Hugo-Self 博客框架</title>
+      <link>http://localhost:8000/posts/welcome/</link>
+      <pubDate>Thu, 21 Aug 2025 15:30:00 +0800</pubDate>
+      <guid>http://localhost:8000/posts/welcome/</guid>
+      <description>Hugo-Self 博客框架的介绍和使用指南</description>
+      <content:encoded><![CDATA[<h2 id="欢迎来到-hugo-self">欢迎来到 Hugo-Self</h2>
+<p>Hugo-Self 是一个基于 Hugo PaperMod 主题精简而来的个人博客框架，专注于内容展示和管理。</p>
+<h2 id="主要特性">主要特性</h2>
+<h3 id="-专注内容">🎯 专注内容</h3>
+<ul>
+<li>移除了社交分享、评论等冗余功能</li>
+<li>保留了文章展示的核心功能</li>
+<li>界面简洁，突出内容本身</li>
+</ul>
+<h3 id="-markdown-支持">📝 Markdown 支持</h3>
+<p>Hugo-Self 完美支持 Markdown 语法，包括：</p>
+<ul>
+<li><strong>粗体文本</strong></li>
+<li><em>斜体文本</em></li>
+<li><code>行内代码</code></li>
+<li><a href="https://gohugo.io">链接</a></li>
+</ul>
+<h3 id="代码高亮">代码高亮</h3>
+<p>支持多种编程语言的代码高亮：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="ln">1</span><span class="cl"><span class="k">def</span> <span class="nf">hello_world</span><span class="p">():</span>
+</span></span><span class="line"><span class="ln">2</span><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;Hello, Hugo-Self!&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="ln">3</span><span class="cl">    <span class="k">return</span> <span class="s2">&#34;欢迎使用精简博客框架&#34;</span>
+</span></span><span class="line"><span class="ln">4</span><span class="cl">
+</span></span><span class="line"><span class="ln">5</span><span class="cl"><span class="c1"># 调用函数</span>
+</span></span><span class="line"><span class="ln">6</span><span class="cl"><span class="n">message</span> <span class="o">=</span> <span class="n">hello_world</span><span class="p">()</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="ln"> 1</span><span class="cl"><span class="c1">// JavaScript 示例
+</span></span></span><span class="line"><span class="ln"> 2</span><span class="cl"><span class="c1"></span><span class="kd">function</span> <span class="nx">createBlog</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="ln"> 3</span><span class="cl">    <span class="kr">const</span> <span class="nx">blog</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="ln"> 4</span><span class="cl">        <span class="nx">name</span><span class="o">:</span> <span class="s2">&#34;Hugo-Self&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="ln"> 5</span><span class="cl">        <span class="nx">theme</span><span class="o">:</span> <span class="s2">&#34;PaperMod&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="ln"> 6</span><span class="cl">        <span class="nx">features</span><span class="o">:</span> <span class="p">[</span><span class="s2">&#34;简洁&#34;</span><span class="p">,</span> <span class="s2">&#34;快速&#34;</span><span class="p">,</span> <span class="s2">&#34;专注内容&#34;</span><span class="p">]</span>
+</span></span><span class="line"><span class="ln"> 7</span><span class="cl">    <span class="p">};</span>
+</span></span><span class="line"><span class="ln"> 8</span><span class="cl">    
+</span></span><span class="line"><span class="ln"> 9</span><span class="cl">    <span class="k">return</span> <span class="nx">blog</span><span class="p">;</span>
+</span></span><span class="line"><span class="ln">10</span><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="ln">11</span><span class="cl">
+</span></span><span class="line"><span class="ln">12</span><span class="cl"><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">createBlog</span><span class="p">());</span>
+</span></span></code></pre></div><h3 id="-响应式设计">📱 响应式设计</h3>
+<p>Hugo-Self 采用响应式设计，在各种设备上都能完美显示：</p>
+<ul>
+<li>桌面电脑</li>
+<li>平板电脑</li>
+<li>手机</li>
+</ul>
+<h3 id="-搜索功能">🔍 搜索功能</h3>
+<p>内置了基于 Fuse.js 的搜索功能，可以快速找到你需要的内容。</p>
+<h3 id="-标签和分类">🏷️ 标签和分类</h3>
+<p>支持为文章添加标签和分类，方便内容管理和检索。</p>
+<h2 id="如何使用">如何使用</h2>
+<h3 id="创建新文章">创建新文章</h3>
+<ol>
+<li>在 <code>content/posts/</code> 目录下创建新的 Markdown 文件</li>
+<li>添加 Front Matter 元数据</li>
+<li>编写文章内容</li>
+</ol>
+<h3 id="front-matter-示例">Front Matter 示例</h3>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="ln"> 1</span><span class="cl"><span class="nn">---</span><span class="w">
+</span></span></span><span class="line"><span class="ln"> 2</span><span class="cl"><span class="w"></span><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;文章标题&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="ln"> 3</span><span class="cl"><span class="w"></span><span class="nt">date</span><span class="p">:</span><span class="w"> </span><span class="ld">2025-08-21T15:30:00</span><span class="m">+08</span><span class="p">:</span><span class="m">00</span><span class="w">
+</span></span></span><span class="line"><span class="ln"> 4</span><span class="cl"><span class="w"></span><span class="nt">draft</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span></span></span><span class="line"><span class="ln"> 5</span><span class="cl"><span class="w"></span><span class="nt">tags</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&#34;标签1&#34;</span><span class="p">,</span><span class="w"> </span><span class="s2">&#34;标签2&#34;</span><span class="p">]</span><span class="w">
+</span></span></span><span class="line"><span class="ln"> 6</span><span class="cl"><span class="w"></span><span class="nt">categories</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&#34;分类&#34;</span><span class="p">]</span><span class="w">
+</span></span></span><span class="line"><span class="ln"> 7</span><span class="cl"><span class="w"></span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;文章描述&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="ln"> 8</span><span class="cl"><span class="w"></span><span class="nt">ShowToc</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="ln"> 9</span><span class="cl"><span class="w"></span><span class="nt">TocOpen</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span></span></span><span class="line"><span class="ln">10</span><span class="cl"><span class="w"></span><span class="nn">---</span><span class="w">
+</span></span></span></code></pre></div><h3 id="本地预览">本地预览</h3>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="ln">1</span><span class="cl">hugo server -D
+</span></span></code></pre></div><h3 id="生成静态文件">生成静态文件</h3>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="ln">1</span><span class="cl">hugo
+</span></span></code></pre></div><h2 id="目录结构">目录结构</h2>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="ln"> 1</span><span class="cl">hugo-self/
+</span></span><span class="line"><span class="ln"> 2</span><span class="cl">├── content/          # 文章内容
+</span></span><span class="line"><span class="ln"> 3</span><span class="cl">│   ├── posts/        # 博客文章
+</span></span><span class="line"><span class="ln"> 4</span><span class="cl">│   ├── _index.md     # 首页内容
+</span></span><span class="line"><span class="ln"> 5</span><span class="cl">│   ├── archives.md   # 归档页面
+</span></span><span class="line"><span class="ln"> 6</span><span class="cl">│   └── search.md     # 搜索页面
+</span></span><span class="line"><span class="ln"> 7</span><span class="cl">├── static/           # 静态资源
+</span></span><span class="line"><span class="ln"> 8</span><span class="cl">│   └── images/       # 图片文件
+</span></span><span class="line"><span class="ln"> 9</span><span class="cl">├── layouts/          # 模板文件
+</span></span><span class="line"><span class="ln">10</span><span class="cl">├── assets/           # 样式和脚本
+</span></span><span class="line"><span class="ln">11</span><span class="cl">├── i18n/            # 国际化文件
+</span></span><span class="line"><span class="ln">12</span><span class="cl">└── hugo.toml        # 配置文件
+</span></span></code></pre></div><h2 id="自定义配置">自定义配置</h2>
+<p>你可以通过修改 <code>hugo.toml</code> 文件来自定义博客：</p>
+<ul>
+<li>网站标题和描述</li>
+<li>菜单配置</li>
+<li>主题设置</li>
+<li>功能开关</li>
+</ul>
+<h2 id="部署">部署</h2>
+<p>Hugo-Self 生成的是静态网站，可以部署到任何静态网站托管服务：</p>
+<ul>
+<li>GitHub Pages</li>
+<li>Netlify</li>
+<li>Vercel</li>
+<li>自己的服务器</li>
+</ul>
+<h2 id="总结">总结</h2>
+<p>Hugo-Self 是一个专注于内容展示的精简博客框架，它：</p>
+<blockquote>
+<p>去除了复杂的功能，保留了博客的本质 —— 专注于内容创作和展示。</p></blockquote>
+<p>希望你能喜欢这个简洁而强大的博客框架！</p>
+<hr>
+<p><em>这是一篇示例文章，展示了 Hugo-Self 的各种功能。你可以删除这篇文章，开始创建自己的内容。</em></p>
+]]></content:encoded>
+    </item>
+    <item>
+      <title>Markdown 语法指南</title>
+      <link>http://localhost:8000/posts/markdown-guide/</link>
+      <pubDate>Thu, 21 Aug 2025 14:00:00 +0800</pubDate>
+      <guid>http://localhost:8000/posts/markdown-guide/</guid>
+      <description>详细的 Markdown 语法使用指南</description>
+      <content:encoded><![CDATA[<h2 id="基础语法">基础语法</h2>
+<h3 id="标题">标题</h3>
+<p>使用 <code>#</code> 来创建标题，支持 1-6 级标题：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-markdown" data-lang="markdown"><span class="line"><span class="ln">1</span><span class="cl"><span class="gh"># 一级标题
+</span></span></span><span class="line"><span class="ln">2</span><span class="cl"><span class="gh"></span><span class="gu">## 二级标题
+</span></span></span><span class="line"><span class="ln">3</span><span class="cl"><span class="gu">### 三级标题
+</span></span></span><span class="line"><span class="ln">4</span><span class="cl"><span class="gu">#### 四级标题
+</span></span></span><span class="line"><span class="ln">5</span><span class="cl"><span class="gu">##### 五级标题
+</span></span></span><span class="line"><span class="ln">6</span><span class="cl"><span class="gu">###### 六级标题
+</span></span></span></code></pre></div><h3 id="文本格式">文本格式</h3>
+<ul>
+<li><strong>粗体文本</strong>：使用 <code>**文本**</code> 或 <code>__文本__</code></li>
+<li><em>斜体文本</em>：使用 <code>*文本*</code> 或 <code>_文本_</code></li>
+<li><em><strong>粗斜体</strong></em>：使用 <code>***文本***</code></li>
+<li><del>删除线</del>：使用 <code>~~文本~~</code></li>
+</ul>
+<h3 id="列表">列表</h3>
+<h4 id="无序列表">无序列表</h4>
+<p>使用 <code>-</code>、<code>*</code> 或 <code>+</code> 创建无序列表：</p>
+<ul>
+<li>项目 1</li>
+<li>项目 2
+<ul>
+<li>子项目 2.1</li>
+<li>子项目 2.2</li>
+</ul>
+</li>
+<li>项目 3</li>
+</ul>
+<h4 id="有序列表">有序列表</h4>
+<p>使用数字加点创建有序列表：</p>
+<ol>
+<li>第一项</li>
+<li>第二项
+<ol>
+<li>子项目 2.1</li>
+<li>子项目 2.2</li>
+</ol>
+</li>
+<li>第三项</li>
+</ol>
+<h3 id="链接和图片">链接和图片</h3>
+<h4 id="链接">链接</h4>
+<ul>
+<li>内联链接：<a href="https://gohugo.io">Hugo 官网</a></li>
+<li>引用链接：<a href="https://google.com">Google</a></li>
+</ul>
+<h4 id="图片">图片</h4>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-markdown" data-lang="markdown"><span class="line"><span class="ln">1</span><span class="cl">![<span class="nt">替代文本</span>](<span class="na">图片链接</span>)
+</span></span></code></pre></div><h3 id="引用">引用</h3>
+<blockquote>
+<p>这是一个引用块。</p>
+<p>可以包含多行内容。</p>
+<blockquote>
+<p>这是嵌套引用。</p></blockquote></blockquote>
+<h3 id="代码">代码</h3>
+<h4 id="行内代码">行内代码</h4>
+<p>使用反引号包围代码：<code>console.log(&quot;Hello World&quot;)</code></p>
+<h4 id="代码块">代码块</h4>
+<p>使用三个反引号创建代码块：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="ln">1</span><span class="cl"><span class="k">def</span> <span class="nf">fibonacci</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+</span></span><span class="line"><span class="ln">2</span><span class="cl">    <span class="k">if</span> <span class="n">n</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
+</span></span><span class="line"><span class="ln">3</span><span class="cl">        <span class="k">return</span> <span class="n">n</span>
+</span></span><span class="line"><span class="ln">4</span><span class="cl">    <span class="k">return</span> <span class="n">fibonacci</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">fibonacci</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span>
+</span></span><span class="line"><span class="ln">5</span><span class="cl">
+</span></span><span class="line"><span class="ln">6</span><span class="cl"><span class="c1"># 计算斐波那契数列</span>
+</span></span><span class="line"><span class="ln">7</span><span class="cl"><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+</span></span><span class="line"><span class="ln">8</span><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;F(</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">) = </span><span class="si">{</span><span class="n">fibonacci</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="line"><span class="ln"> 1</span><span class="cl"><span class="cp">&lt;!DOCTYPE html&gt;</span>
+</span></span><span class="line"><span class="ln"> 2</span><span class="cl"><span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="ln"> 3</span><span class="cl"><span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="ln"> 4</span><span class="cl">    <span class="p">&lt;</span><span class="nt">title</span><span class="p">&gt;</span>Hugo-Self<span class="p">&lt;/</span><span class="nt">title</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="ln"> 5</span><span class="cl"><span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="ln"> 6</span><span class="cl"><span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="ln"> 7</span><span class="cl">    <span class="p">&lt;</span><span class="nt">h1</span><span class="p">&gt;</span>欢迎使用 Hugo-Self<span class="p">&lt;/</span><span class="nt">h1</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="ln"> 8</span><span class="cl">    <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>专注于内容展示的博客框架<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="ln"> 9</span><span class="cl"><span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="ln">10</span><span class="cl"><span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
+</span></span></code></pre></div><h3 id="表格">表格</h3>
+<table>
+  <thead>
+      <tr>
+          <th>功能</th>
+          <th>Hugo-Self</th>
+          <th>其他框架</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>简洁性</td>
+          <td>✅ 优秀</td>
+          <td>❌ 复杂</td>
+      </tr>
+      <tr>
+          <td>速度</td>
+          <td>✅ 快速</td>
+          <td>⚠️ 一般</td>
+      </tr>
+      <tr>
+          <td>专注度</td>
+          <td>✅ 专注内容</td>
+          <td>❌ 功能冗余</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="分割线">分割线</h3>
+<p>使用三个或更多的 <code>-</code>、<code>*</code> 或 <code>_</code> 创建分割线：</p>
+<hr>
+<h2 id="扩展语法">扩展语法</h2>
+<h3 id="任务列表">任务列表</h3>
+<ul>
+<li><input checked="" disabled="" type="checkbox"> 完成项目设置</li>
+<li><input checked="" disabled="" type="checkbox"> 编写文档</li>
+<li><input disabled="" type="checkbox"> 添加更多示例</li>
+<li><input disabled="" type="checkbox"> 优化性能</li>
+</ul>
+<h3 id="脚注">脚注</h3>
+<p>这是一个带脚注的文本<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>。</p>
+<h3 id="高亮文本">高亮文本</h3>
+<p>使用 <code>==文本==</code> 来==高亮文本==（需要主题支持）。</p>
+<h3 id="数学公式">数学公式</h3>
+<p>行内公式：$E = mc^2$</p>
+<p>块级公式：
+$$
+\sum_{i=1}^{n} i = \frac{n(n+1)}{2}
+$$</p>
+<h2 id="最佳实践">最佳实践</h2>
+<h3 id="1-文档结构">1. 文档结构</h3>
+<ul>
+<li>使用清晰的标题层次</li>
+<li>合理使用列表和表格</li>
+<li>适当添加分割线分隔内容</li>
+</ul>
+<h3 id="2-代码展示">2. 代码展示</h3>
+<ul>
+<li>为代码块指定语言以获得语法高亮</li>
+<li>使用行内代码标记关键词</li>
+<li>提供完整的代码示例</li>
+</ul>
+<h3 id="3-链接管理">3. 链接管理</h3>
+<ul>
+<li>使用描述性的链接文本</li>
+<li>对外部链接考虑使用引用式链接</li>
+<li>确保链接的有效性</li>
+</ul>
+<h3 id="4-图片优化">4. 图片优化</h3>
+<ul>
+<li>使用有意义的替代文本</li>
+<li>控制图片大小和格式</li>
+<li>考虑图片的加载性能</li>
+</ul>
+<h2 id="总结">总结</h2>
+<p>Markdown 是一种轻量级标记语言，具有以下优点：</p>
+<ol>
+<li><strong>简单易学</strong>：语法简洁，容易掌握</li>
+<li><strong>可读性强</strong>：即使是原始文本也很容易阅读</li>
+<li><strong>广泛支持</strong>：几乎所有现代编辑器都支持</li>
+<li><strong>转换灵活</strong>：可以转换为 HTML、PDF 等多种格式</li>
+</ol>
+<p>在 Hugo-Self 中，你可以充分利用 Markdown 的这些特性来创建优质的内容。</p>
+<hr>
+<p><em>掌握 Markdown 语法，让你的写作更加高效！</em></p>
+<div class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1">
+<p>这是脚注的内容。&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</div>
+]]></content:encoded>
+    </item>
+  </channel>
+</rss>

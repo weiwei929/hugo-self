@@ -6,20 +6,287 @@
     <title>Hugo-Self 管理后台</title>
     {{ $adminCSS := resources.Get "css/extended/admin.css" | resources.Minify }}
     <link rel="stylesheet" href="{{ $adminCSS.RelPermalink }}">
-</head>
-<body>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f5f7fa;
+            line-height: 1.6;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .user-info {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logout-btn {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.3);
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .main-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .main-card h2 {
+            color: #2d3748;
+            font-size: 2em;
+            margin-bottom: 1rem;
+        }
+
+        .main-card p {
+            color: #4a5568;
+            font-size: 1.1em;
+            margin-bottom: 2rem;
+            line-height: 1.8;
+        }
+
+        .feature-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .feature-item {
+            background: #f7fafc;
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: left;
+        }
+
+        .feature-item strong {
+            color: #2d3748;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .function-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .function-card {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .function-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .function-icon {
+            font-size: 3em;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .function-card h3 {
+            color: #2d3748;
+            margin-bottom: 0.5rem;
+            font-size: 1.2em;
+        }
+
+        .function-card p {
+            color: #4a5568;
+            font-size: 0.9em;
+            line-height: 1.5;
+            margin-bottom: 0;
+        }
+
+        .function-badge {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: #667eea;
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.7em;
+            font-weight: 600;
+        }
+
+        .function-badge.recommended {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #4a5568;
+            font-size: 0.9em;
+        }
+
+        .recent-files {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .recent-files h3 {
+            color: #2d3748;
+            margin-bottom: 1rem;
+        }
+
+        .file-list {
+            list-style: none;
+        }
+
+        .file-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .file-item:last-child {
+            border-bottom: none;
+        }
+
+        .file-name {
+            font-weight: 500;
+            color: #2d3748;
+        }
+
+        .file-date {
+            font-size: 0.8em;
+            color: #718096;
+        }
+
+        .status-badge {
+            font-size: 0.7em;
+            padding: 0.3rem 0.8rem;
+            border-radius: 12px;
+            font-weight: 500;
+        }
+
+        .status-published {
+            background: #c6f6d5;
+            color: #22543d;
+        }
+
+        .status-draft {
+            background: #fed7d7;
+            color: #742a2a;
+        }
 
         @media (max-width: 768px) {
             .container {
-                padding: 0 1rem;
-            }
-            
-            .header {
                 padding: 1rem;
             }
             
-            .dashboard-grid {
-                grid-template-columns: 1fr;
+            .header {
+                padding: 1.5rem 1rem;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .user-info {
+                position: static;
+                justify-content: center;
+                margin-top: 1rem;
             }
         }
     </style>
@@ -37,16 +304,16 @@
         <!-- 统计信息 -->
         <div class="stats">
             <div class="stat-card">
-                <div class="stat-number" id="totalPosts">3</div>
+                <div class="stat-number" id="totalPosts">0</div>
                 <div class="stat-label">已发布文章</div>
             </div>
             <div class="stat-card">
-                <div class="stat-number" id="draftPosts">0</div>
+                <div class="stat-number" id="totalDrafts">0</div>
                 <div class="stat-label">草稿文章</div>
             </div>
             <div class="stat-card">
-                <div class="stat-number" id="pendingFiles">0</div>
-                <div class="stat-label">待处理文件</div>
+                <div class="stat-number" id="totalDocuments">0</div>
+                <div class="stat-label">总文档数</div>
             </div>
             <div class="stat-card">
                 <div class="stat-number" id="totalImages">0</div>
@@ -54,30 +321,36 @@
             </div>
         </div>
 
-        <!-- 功能卡片 -->
-        <div class="dashboard-grid">
-            <div class="card">
-                <h3>📝 文档管理</h3>
-                <p>批量上传、处理和发布 Markdown 文档。支持从 Obsidian、Typora 等编辑器导入。</p>
-                <a href="/admin/documents/" class="btn">管理文档</a>
-            </div>
-
-            <div class="card">
-                <h3>🖼️ 图片管理</h3>
-                <p>上传、组织和管理博客图片资源。支持批量处理和格式优化。</p>
-                <a href="/admin/images/" class="btn">管理图片</a>
-            </div>
-
-            <div class="card">
-                <h3>⚙️ 网站设置</h3>
-                <p>配置网站标题、描述、菜单等基本设置。自定义主题和样式。</p>
-                <a href="/admin/settings/" class="btn btn-secondary">网站设置</a>
-            </div>
-
-            <div class="card">
-                <h3>🔍 内容预览</h3>
-                <p>预览网站效果，查看已发布内容。快速访问前台页面。</p>
-                <a href="/" target="_blank" class="btn btn-secondary">查看网站</a>
+        <!-- 主要功能卡片 -->
+        <div class="main-card">
+            <h2>📋 Hugo-Self 管理中心</h2>
+            <p>Hugo-Self 为您提供专业的内容管理体验。选择以下功能模块开始您的内容创作之旅。</p>
+            
+            <div class="function-grid">
+                <div class="function-card" onclick="openEditor()">
+                    <div class="function-icon">📝</div>
+                    <h3>集成式编辑器</h3>
+                    <p>功能完整的Markdown编辑器，支持文件上传、在线编辑、图片管理和一键发布</p>
+                    <span class="function-badge recommended">推荐</span>
+                </div>
+                
+                <div class="function-card" onclick="openDocuments()">
+                    <div class="function-icon">📁</div>
+                    <h3>文档管理</h3>
+                    <p>浏览和管理所有文档，查看发布状态，批量操作文档</p>
+                </div>
+                
+                <div class="function-card" onclick="openImages()">
+                    <div class="function-icon">🖼️</div>
+                    <h3>图片资源</h3>
+                    <p>管理博客图片资源，上传、预览和组织图片文件</p>
+                </div>
+                
+                <div class="function-card" onclick="openProcess()">
+                    <div class="function-icon">⚙️</div>
+                    <h3>文档处理</h3>
+                    <p>批量处理文档，格式转换，元数据管理</p>
+                </div>
             </div>
         </div>
 
@@ -117,28 +390,99 @@
         function checkAuth() {
             const auth = localStorage.getItem(AUTH_KEY);
             if (!auth) {
-                window.location.href = '/admin/login/';
+                redirectToLogin();
                 return false;
             }
 
-            const authData = JSON.parse(auth);
-            if (Date.now() >= authData.expiry) {
+            try {
+                const authData = JSON.parse(auth);
+                if (Date.now() >= authData.expiry) {
+                    logout(false); // 静默退出，不显示确认框
+                    return false;
+                }
+
+                // 更新用户名显示
+                const usernameElement = document.getElementById('username');
+                if (usernameElement) {
+                    usernameElement.textContent = authData.username || 'admin';
+                }
+                return true;
+            } catch (e) {
+                // 如果认证数据损坏，清除并重新登录
                 localStorage.removeItem(AUTH_KEY);
-                window.location.href = '/admin/login/';
+                redirectToLogin();
                 return false;
             }
+        }
 
-            // 更新用户名显示
-            document.getElementById('username').textContent = authData.username;
-            return true;
+        // 重定向到登录页面
+        function redirectToLogin() {
+            // 显示提示信息
+            if (document.body) {
+                const overlay = document.createElement('div');
+                overlay.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0,0,0,0.8);
+                    color: white;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 1.2em;
+                    z-index: 10000;
+                `;
+                overlay.innerHTML = '<div>登录已过期，正在跳转到登录页面...</div>';
+                document.body.appendChild(overlay);
+                
+                setTimeout(() => {
+                    window.location.href = '/login/';
+                }, 1500);
+            } else {
+                window.location.href = '/login/';
+            }
         }
 
         // 退出登录
-        function logout() {
-            if (confirm('确定要退出登录吗？')) {
-                localStorage.removeItem(AUTH_KEY);
-                window.location.href = '/admin/login/';
+        function logout(showConfirm = true) {
+            if (showConfirm && !confirm('确定要退出登录吗？')) {
+                return;
             }
+            
+            // 清除所有认证相关数据
+            localStorage.removeItem(AUTH_KEY);
+            sessionStorage.clear();
+            
+            // 清除所有cookie（如果有的话）
+            document.cookie.split(";").forEach(function(c) { 
+                document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); 
+            });
+            
+            // 显示退出成功信息
+            const overlay = document.createElement('div');
+            overlay.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(76, 175, 80, 0.9);
+                color: white;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 1.5em;
+                z-index: 10000;
+            `;
+            overlay.innerHTML = '<div>✅ 已安全退出，正在跳转...</div>';
+            document.body.appendChild(overlay);
+            
+            // 跳转到登录页面
+            setTimeout(() => {
+                window.location.href = '/login/';
+            }, 1500);
         }
 
         // 页面加载时检查登录状态
@@ -153,9 +497,154 @@
 
         // 加载仪表板数据
         function loadDashboardData() {
-            // 这里可以通过API或其他方式加载实际数据
-            // 目前使用静态数据作为示例
-            console.log('Dashboard loaded');
+            // 加载统计数据
+            loadStats();
+            
+            // 定期更新统计数据
+            setInterval(loadStats, 30000); // 每30秒更新一次
+        }
+
+        // 加载统计数据
+        function loadStats() {
+            Promise.all([
+                loadDocumentStats(),
+                loadImageStats(),
+                loadSystemStats()
+            ]).then(() => {
+                console.log('统计数据更新完成');
+            }).catch(error => {
+                console.error('加载统计数据失败:', error);
+            });
+        }
+
+        // 加载文档统计
+        function loadDocumentStats() {
+            console.log('开始加载文档统计...');
+            return fetch('http://localhost:8081/api/documents')
+                .then(response => {
+                    console.log('统计API响应状态:', response.status);
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                    }
+                    return response.json();
+                })
+                .then(result => {
+                    console.log('统计API响应数据:', result);
+                    
+                    let documents = [];
+                    if (result.success && result.data) {
+                        documents = result.data;
+                    } else if (Array.isArray(result)) {
+                        documents = result;
+                    }
+                    
+                    // 统计各种状态的文档
+                    const published = documents.filter(d => d.status === 'published').length;
+                    const drafts = documents.filter(d => d.status === 'pending' || d.status === 'processed').length;
+                    const total = documents.length;
+                    
+                    console.log('文档统计:', { published, drafts, total });
+                    
+                    // 更新页面显示
+                    updateStatElement('totalPosts', published);
+                    updateStatElement('totalDrafts', drafts);
+                    updateStatElement('totalDocuments', total);
+                })
+                .catch(error => {
+                    console.warn('统计服务器连接失败，使用本地数据:', error.message);
+                    
+                    // 回退到localStorage
+                    const stored = localStorage.getItem('hugo_self_documents') || '[]';
+                    try {
+                        const documents = JSON.parse(stored);
+                        
+                        const published = documents.filter(d => d.status === 'published').length;
+                        const drafts = documents.filter(d => d.status === 'pending' || d.status === 'processed').length;
+                        const total = documents.length;
+                        
+                        updateStatElement('totalPosts', published);
+                        updateStatElement('totalDrafts', drafts);
+                        updateStatElement('totalDocuments', total);
+                    } catch (e) {
+                        console.error('解析本地统计数据失败:', e);
+                        updateStatElement('totalPosts', 0);
+                        updateStatElement('totalDrafts', 0);
+                        updateStatElement('totalDocuments', 0);
+                    }
+                });
+        }
+
+        // 加载图片统计
+        function loadImageStats() {
+            return new Promise((resolve) => {
+                // 从 localStorage 加载图片数据
+                const stored = localStorage.getItem('hugo_self_images') || '[]';
+                const images = JSON.parse(stored);
+                
+                updateStatElement('totalImages', images.length);
+                resolve();
+            });
+        }
+
+        // 加载系统统计
+        function loadSystemStats() {
+            return new Promise((resolve) => {
+                // 统计最近活动
+                const today = new Date().toDateString();
+                const recentCount = parseInt(localStorage.getItem('recent_activity_count') || '0');
+                
+                updateStatElement('recentActivity', recentCount);
+                resolve();
+            });
+        }
+
+        // 更新统计元素
+        function updateStatElement(elementId, value) {
+            const element = document.getElementById(elementId);
+            if (element) {
+                // 数字动画效果
+                const currentValue = parseInt(element.textContent) || 0;
+                if (currentValue !== value) {
+                    animateNumber(element, currentValue, value);
+                }
+            }
+        }
+
+        // 数字动画效果
+        function animateNumber(element, start, end) {
+            const duration = 1000; // 1秒
+            const startTime = performance.now();
+            
+            function update(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                
+                const current = Math.round(start + (end - start) * progress);
+                element.textContent = current;
+                
+                if (progress < 1) {
+                    requestAnimationFrame(update);
+                }
+            }
+            
+            requestAnimationFrame(update);
+        }
+
+        // 功能导航函数
+        function openEditor() {
+            window.open('/admin/editor/', '_blank');
+        }
+
+        function openDocuments() {
+            window.open('/admin/documents/', '_blank');
+        }
+
+        function openImages() {
+            window.open('/admin/images/', '_blank');
+        }
+
+        function openProcess() {
+            window.open('/admin/process/', '_blank');
         }
 
         // 定期检查登录状态

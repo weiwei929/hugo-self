@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=8000&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Markdown 语法指南 | Hugo-Self 博客</title>
+<meta name="keywords" content="Markdown, 语法, 教程">
+<meta name="description" content="详细的 Markdown 语法使用指南">
+<meta name="author" content="Hugo-Self">
+<link rel="canonical" href="http://localhost:8000/posts/markdown-guide/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.697348355092e25b842cf75c4bff8b62a0a5c10ef6be49ed004829028a17ef7a.css" integrity="sha256-aXNINVCS4luELPdcS/&#43;LYqClwQ72vkntAEgpAooX73o=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:8000/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:8000/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:8000/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:8000/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:8000/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:8000/posts/markdown-guide/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:8000/" accesskey="h" title="Hugo-Self 博客 (Alt + H)">Hugo-Self 博客</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="http://localhost:8000/" title="首页">
+                    <span>首页</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:8000/archives/" title="归档">
+                    <span>归档</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:8000/tags/" title="标签">
+                    <span>标签</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:8000/categories/" title="分类">
+                    <span>分类</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:8000/search/" title="搜索 (Alt &#43; /)" accesskey=/>
+                    <span>搜索</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="http://localhost:8000/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:8000/posts/">Posts</a></div>
+    <h1 class="post-title entry-hint-parent">
+      Markdown 语法指南
+    </h1>
+    <div class="post-description">
+      详细的 Markdown 语法使用指南
+    </div>
+    <div class="post-meta"><span title='2025-08-21 14:00:00 +0800 CST'>August 21, 2025</span>&nbsp;·&nbsp;1 min&nbsp;·&nbsp;Hugo-Self
+
+</div>
+  </header> <div class="toc">
+    <details  open>
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#%e5%9f%ba%e7%a1%80%e8%af%ad%e6%b3%95" aria-label="基础语法">基础语法</a><ul>
+                        
+                <li>
+                    <a href="#%e6%a0%87%e9%a2%98" aria-label="标题">标题</a></li>
+                <li>
+                    <a href="#%e6%96%87%e6%9c%ac%e6%a0%bc%e5%bc%8f" aria-label="文本格式">文本格式</a></li>
+                <li>
+                    <a href="#%e5%88%97%e8%a1%a8" aria-label="列表">列表</a><ul>
+                        
+                <li>
+                    <a href="#%e6%97%a0%e5%ba%8f%e5%88%97%e8%a1%a8" aria-label="无序列表">无序列表</a></li>
+                <li>
+                    <a href="#%e6%9c%89%e5%ba%8f%e5%88%97%e8%a1%a8" aria-label="有序列表">有序列表</a></li></ul>
+                </li>
+                <li>
+                    <a href="#%e9%93%be%e6%8e%a5%e5%92%8c%e5%9b%be%e7%89%87" aria-label="链接和图片">链接和图片</a><ul>
+                        
+                <li>
+                    <a href="#%e9%93%be%e6%8e%a5" aria-label="链接">链接</a></li>
+                <li>
+                    <a href="#%e5%9b%be%e7%89%87" aria-label="图片">图片</a></li></ul>
+                </li>
+                <li>
+                    <a href="#%e5%bc%95%e7%94%a8" aria-label="引用">引用</a></li>
+                <li>
+                    <a href="#%e4%bb%a3%e7%a0%81" aria-label="代码">代码</a><ul>
+                        
+                <li>
+                    <a href="#%e8%a1%8c%e5%86%85%e4%bb%a3%e7%a0%81" aria-label="行内代码">行内代码</a></li>
+                <li>
+                    <a href="#%e4%bb%a3%e7%a0%81%e5%9d%97" aria-label="代码块">代码块</a></li></ul>
+                </li>
+                <li>
+                    <a href="#%e8%a1%a8%e6%a0%bc" aria-label="表格">表格</a></li>
+                <li>
+                    <a href="#%e5%88%86%e5%89%b2%e7%ba%bf" aria-label="分割线">分割线</a></li></ul>
+                </li>
+                <li>
+                    <a href="#%e6%89%a9%e5%b1%95%e8%af%ad%e6%b3%95" aria-label="扩展语法">扩展语法</a><ul>
+                        
+                <li>
+                    <a href="#%e4%bb%bb%e5%8a%a1%e5%88%97%e8%a1%a8" aria-label="任务列表">任务列表</a></li>
+                <li>
+                    <a href="#%e8%84%9a%e6%b3%a8" aria-label="脚注">脚注</a></li>
+                <li>
+                    <a href="#%e9%ab%98%e4%ba%ae%e6%96%87%e6%9c%ac" aria-label="高亮文本">高亮文本</a></li>
+                <li>
+                    <a href="#%e6%95%b0%e5%ad%a6%e5%85%ac%e5%bc%8f" aria-label="数学公式">数学公式</a></li></ul>
+                </li>
+                <li>
+                    <a href="#%e6%9c%80%e4%bd%b3%e5%ae%9e%e8%b7%b5" aria-label="最佳实践">最佳实践</a><ul>
+                        
+                <li>
+                    <a href="#1-%e6%96%87%e6%a1%a3%e7%bb%93%e6%9e%84" aria-label="1. 文档结构">1. 文档结构</a></li>
+                <li>
+                    <a href="#2-%e4%bb%a3%e7%a0%81%e5%b1%95%e7%a4%ba" aria-label="2. 代码展示">2. 代码展示</a></li>
+                <li>
+                    <a href="#3-%e9%93%be%e6%8e%a5%e7%ae%a1%e7%90%86" aria-label="3. 链接管理">3. 链接管理</a></li>
+                <li>
+                    <a href="#4-%e5%9b%be%e7%89%87%e4%bc%98%e5%8c%96" aria-label="4. 图片优化">4. 图片优化</a></li></ul>
+                </li>
+                <li>
+                    <a href="#%e6%80%bb%e7%bb%93" aria-label="总结">总结</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h2 id="基础语法">基础语法<a hidden class="anchor" aria-hidden="true" href="#基础语法">#</a></h2>
+<h3 id="标题">标题<a hidden class="anchor" aria-hidden="true" href="#标题">#</a></h3>
+<p>使用 <code>#</code> 来创建标题，支持 1-6 级标题：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-markdown" data-lang="markdown"><span class="line"><span class="ln">1</span><span class="cl"><span class="gh"># 一级标题
+</span></span></span><span class="line"><span class="ln">2</span><span class="cl"><span class="gh"></span><span class="gu">## 二级标题
+</span></span></span><span class="line"><span class="ln">3</span><span class="cl"><span class="gu">### 三级标题
+</span></span></span><span class="line"><span class="ln">4</span><span class="cl"><span class="gu">#### 四级标题
+</span></span></span><span class="line"><span class="ln">5</span><span class="cl"><span class="gu">##### 五级标题
+</span></span></span><span class="line"><span class="ln">6</span><span class="cl"><span class="gu">###### 六级标题
+</span></span></span></code></pre></div><h3 id="文本格式">文本格式<a hidden class="anchor" aria-hidden="true" href="#文本格式">#</a></h3>
+<ul>
+<li><strong>粗体文本</strong>：使用 <code>**文本**</code> 或 <code>__文本__</code></li>
+<li><em>斜体文本</em>：使用 <code>*文本*</code> 或 <code>_文本_</code></li>
+<li><em><strong>粗斜体</strong></em>：使用 <code>***文本***</code></li>
+<li><del>删除线</del>：使用 <code>~~文本~~</code></li>
+</ul>
+<h3 id="列表">列表<a hidden class="anchor" aria-hidden="true" href="#列表">#</a></h3>
+<h4 id="无序列表">无序列表<a hidden class="anchor" aria-hidden="true" href="#无序列表">#</a></h4>
+<p>使用 <code>-</code>、<code>*</code> 或 <code>+</code> 创建无序列表：</p>
+<ul>
+<li>项目 1</li>
+<li>项目 2
+<ul>
+<li>子项目 2.1</li>
+<li>子项目 2.2</li>
+</ul>
+</li>
+<li>项目 3</li>
+</ul>
+<h4 id="有序列表">有序列表<a hidden class="anchor" aria-hidden="true" href="#有序列表">#</a></h4>
+<p>使用数字加点创建有序列表：</p>
+<ol>
+<li>第一项</li>
+<li>第二项
+<ol>
+<li>子项目 2.1</li>
+<li>子项目 2.2</li>
+</ol>
+</li>
+<li>第三项</li>
+</ol>
+<h3 id="链接和图片">链接和图片<a hidden class="anchor" aria-hidden="true" href="#链接和图片">#</a></h3>
+<h4 id="链接">链接<a hidden class="anchor" aria-hidden="true" href="#链接">#</a></h4>
+<ul>
+<li>内联链接：<a href="https://gohugo.io">Hugo 官网</a></li>
+<li>引用链接：<a href="https://google.com">Google</a></li>
+</ul>
+<h4 id="图片">图片<a hidden class="anchor" aria-hidden="true" href="#图片">#</a></h4>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-markdown" data-lang="markdown"><span class="line"><span class="ln">1</span><span class="cl">![<span class="nt">替代文本</span>](<span class="na">图片链接</span>)
+</span></span></code></pre></div><h3 id="引用">引用<a hidden class="anchor" aria-hidden="true" href="#引用">#</a></h3>
+<blockquote>
+<p>这是一个引用块。</p>
+<p>可以包含多行内容。</p>
+<blockquote>
+<p>这是嵌套引用。</p></blockquote></blockquote>
+<h3 id="代码">代码<a hidden class="anchor" aria-hidden="true" href="#代码">#</a></h3>
+<h4 id="行内代码">行内代码<a hidden class="anchor" aria-hidden="true" href="#行内代码">#</a></h4>
+<p>使用反引号包围代码：<code>console.log(&quot;Hello World&quot;)</code></p>
+<h4 id="代码块">代码块<a hidden class="anchor" aria-hidden="true" href="#代码块">#</a></h4>
+<p>使用三个反引号创建代码块：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="ln">1</span><span class="cl"><span class="k">def</span> <span class="nf">fibonacci</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+</span></span><span class="line"><span class="ln">2</span><span class="cl">    <span class="k">if</span> <span class="n">n</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
+</span></span><span class="line"><span class="ln">3</span><span class="cl">        <span class="k">return</span> <span class="n">n</span>
+</span></span><span class="line"><span class="ln">4</span><span class="cl">    <span class="k">return</span> <span class="n">fibonacci</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">fibonacci</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span>
+</span></span><span class="line"><span class="ln">5</span><span class="cl">
+</span></span><span class="line"><span class="ln">6</span><span class="cl"><span class="c1"># 计算斐波那契数列</span>
+</span></span><span class="line"><span class="ln">7</span><span class="cl"><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+</span></span><span class="line"><span class="ln">8</span><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;F(</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">) = </span><span class="si">{</span><span class="n">fibonacci</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="line"><span class="ln"> 1</span><span class="cl"><span class="cp">&lt;!DOCTYPE html&gt;</span>
+</span></span><span class="line"><span class="ln"> 2</span><span class="cl"><span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="ln"> 3</span><span class="cl"><span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="ln"> 4</span><span class="cl">    <span class="p">&lt;</span><span class="nt">title</span><span class="p">&gt;</span>Hugo-Self<span class="p">&lt;/</span><span class="nt">title</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="ln"> 5</span><span class="cl"><span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="ln"> 6</span><span class="cl"><span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="ln"> 7</span><span class="cl">    <span class="p">&lt;</span><span class="nt">h1</span><span class="p">&gt;</span>欢迎使用 Hugo-Self<span class="p">&lt;/</span><span class="nt">h1</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="ln"> 8</span><span class="cl">    <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>专注于内容展示的博客框架<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="ln"> 9</span><span class="cl"><span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="ln">10</span><span class="cl"><span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
+</span></span></code></pre></div><h3 id="表格">表格<a hidden class="anchor" aria-hidden="true" href="#表格">#</a></h3>
+<table>
+  <thead>
+      <tr>
+          <th>功能</th>
+          <th>Hugo-Self</th>
+          <th>其他框架</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>简洁性</td>
+          <td>✅ 优秀</td>
+          <td>❌ 复杂</td>
+      </tr>
+      <tr>
+          <td>速度</td>
+          <td>✅ 快速</td>
+          <td>⚠️ 一般</td>
+      </tr>
+      <tr>
+          <td>专注度</td>
+          <td>✅ 专注内容</td>
+          <td>❌ 功能冗余</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="分割线">分割线<a hidden class="anchor" aria-hidden="true" href="#分割线">#</a></h3>
+<p>使用三个或更多的 <code>-</code>、<code>*</code> 或 <code>_</code> 创建分割线：</p>
+<hr>
+<h2 id="扩展语法">扩展语法<a hidden class="anchor" aria-hidden="true" href="#扩展语法">#</a></h2>
+<h3 id="任务列表">任务列表<a hidden class="anchor" aria-hidden="true" href="#任务列表">#</a></h3>
+<ul>
+<li><input checked="" disabled="" type="checkbox"> 完成项目设置</li>
+<li><input checked="" disabled="" type="checkbox"> 编写文档</li>
+<li><input disabled="" type="checkbox"> 添加更多示例</li>
+<li><input disabled="" type="checkbox"> 优化性能</li>
+</ul>
+<h3 id="脚注">脚注<a hidden class="anchor" aria-hidden="true" href="#脚注">#</a></h3>
+<p>这是一个带脚注的文本<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>。</p>
+<h3 id="高亮文本">高亮文本<a hidden class="anchor" aria-hidden="true" href="#高亮文本">#</a></h3>
+<p>使用 <code>==文本==</code> 来==高亮文本==（需要主题支持）。</p>
+<h3 id="数学公式">数学公式<a hidden class="anchor" aria-hidden="true" href="#数学公式">#</a></h3>
+<p>行内公式：$E = mc^2$</p>
+<p>块级公式：
+$$
+\sum_{i=1}^{n} i = \frac{n(n+1)}{2}
+$$</p>
+<h2 id="最佳实践">最佳实践<a hidden class="anchor" aria-hidden="true" href="#最佳实践">#</a></h2>
+<h3 id="1-文档结构">1. 文档结构<a hidden class="anchor" aria-hidden="true" href="#1-文档结构">#</a></h3>
+<ul>
+<li>使用清晰的标题层次</li>
+<li>合理使用列表和表格</li>
+<li>适当添加分割线分隔内容</li>
+</ul>
+<h3 id="2-代码展示">2. 代码展示<a hidden class="anchor" aria-hidden="true" href="#2-代码展示">#</a></h3>
+<ul>
+<li>为代码块指定语言以获得语法高亮</li>
+<li>使用行内代码标记关键词</li>
+<li>提供完整的代码示例</li>
+</ul>
+<h3 id="3-链接管理">3. 链接管理<a hidden class="anchor" aria-hidden="true" href="#3-链接管理">#</a></h3>
+<ul>
+<li>使用描述性的链接文本</li>
+<li>对外部链接考虑使用引用式链接</li>
+<li>确保链接的有效性</li>
+</ul>
+<h3 id="4-图片优化">4. 图片优化<a hidden class="anchor" aria-hidden="true" href="#4-图片优化">#</a></h3>
+<ul>
+<li>使用有意义的替代文本</li>
+<li>控制图片大小和格式</li>
+<li>考虑图片的加载性能</li>
+</ul>
+<h2 id="总结">总结<a hidden class="anchor" aria-hidden="true" href="#总结">#</a></h2>
+<p>Markdown 是一种轻量级标记语言，具有以下优点：</p>
+<ol>
+<li><strong>简单易学</strong>：语法简洁，容易掌握</li>
+<li><strong>可读性强</strong>：即使是原始文本也很容易阅读</li>
+<li><strong>广泛支持</strong>：几乎所有现代编辑器都支持</li>
+<li><strong>转换灵活</strong>：可以转换为 HTML、PDF 等多种格式</li>
+</ol>
+<p>在 Hugo-Self 中，你可以充分利用 Markdown 的这些特性来创建优质的内容。</p>
+<hr>
+<p><em>掌握 Markdown 语法，让你的写作更加高效！</em></p>
+<div class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1">
+<p>这是脚注的内容。&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</div>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="http://localhost:8000/tags/markdown/">Markdown</a></li>
+      <li><a href="http://localhost:8000/tags/%E8%AF%AD%E6%B3%95/">语法</a></li>
+      <li><a href="http://localhost:8000/tags/%E6%95%99%E7%A8%8B/">教程</a></li>
+    </ul>
+<nav class="paginav">
+  <a class="prev" href="http://localhost:8000/posts/welcome/">
+    <span class="title">« Prev</span>
+    <br>
+    <span>欢迎使用 Hugo-Self 博客框架</span>
+  </a>
+  <a class="next" href="http://localhost:8000/posts/hugo-tips/">
+    <span class="title">Next »</span>
+    <br>
+    <span>Hugo 使用技巧和最佳实践</span>
+  </a>
+</nav>
+
+  </footer>
+
+    
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2025 <a href="http://localhost:8000/">Hugo-Self 博客</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+<div class="admin-entrance" style="background: rgba(102, 126, 234, 0.1); padding: 1rem; margin: 2rem 0; border-radius: 8px; text-align: center; border: 1px solid rgba(102, 126, 234, 0.2);">
+    <h3 style="color: #667eea; margin-bottom: 0.5rem; font-size: 1.2em;">📝 内容管理</h3>
+    <p style="margin-bottom: 1rem; color: #666; font-size: 0.9em;">集成式Markdown编辑器，支持文件上传、在线编辑、图片管理等完整功能</p>
+    <a href="http://localhost:8080/" class="admin-link"
+       style="background: #667eea; color: white; padding: 0.7rem 1.5rem; border-radius: 5px; text-decoration: none; font-weight: 500; display: inline-block; transition: all 0.2s;"
+       onmouseover="this.style.background='#5a6fd8'; this.style.transform='translateY(-2px)';"
+       onmouseout="this.style.background='#667eea'; this.style.transform='translateY(0)';"
+       target="_blank">进入文档管理</a>
+</div>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>

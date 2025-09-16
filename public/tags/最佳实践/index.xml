@@ -1,0 +1,357 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>最佳实践 on Hugo-Self 博客</title>
+    <link>http://localhost:8000/tags/%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/</link>
+    <description>Recent content in 最佳实践 on Hugo-Self 博客</description>
+    <generator>Hugo -- 0.148.2</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Tue, 26 Aug 2025 08:58:21 +0800</lastBuildDate>
+    <atom:link href="http://localhost:8000/tags/%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Hugo 使用技巧和最佳实践</title>
+      <link>http://localhost:8000/posts/hugo-tips/</link>
+      <pubDate>Thu, 21 Aug 2025 13:00:00 +0800</pubDate>
+      <guid>http://localhost:8000/posts/hugo-tips/</guid>
+      <description>分享一些 Hugo 静态网站生成器的使用技巧和最佳实践</description>
+      <content:encoded><![CDATA[<h2 id="hugo-简介">Hugo 简介</h2>
+<p>Hugo 是一个用 Go 语言编写的静态网站生成器，以其极快的构建速度而闻名。Hugo-Self 基于 Hugo 构建，继承了其所有优势。</p>
+<h2 id="内容管理技巧">内容管理技巧</h2>
+<h3 id="1-front-matter-最佳实践">1. Front Matter 最佳实践</h3>
+<p>Front Matter 是文章的元数据，建议包含以下字段：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="ln"> 1</span><span class="cl"><span class="nn">---</span><span class="w">
+</span></span></span><span class="line"><span class="ln"> 2</span><span class="cl"><span class="w"></span><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;文章标题&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="ln"> 3</span><span class="cl"><span class="w"></span><span class="nt">date</span><span class="p">:</span><span class="w"> </span><span class="ld">2025-08-21T13:00:00</span><span class="m">+08</span><span class="p">:</span><span class="m">00</span><span class="w">
+</span></span></span><span class="line"><span class="ln"> 4</span><span class="cl"><span class="w"></span><span class="nt">draft</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span></span></span><span class="line"><span class="ln"> 5</span><span class="cl"><span class="w"></span><span class="nt">tags</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&#34;标签1&#34;</span><span class="p">,</span><span class="w"> </span><span class="s2">&#34;标签2&#34;</span><span class="p">]</span><span class="w">
+</span></span></span><span class="line"><span class="ln"> 6</span><span class="cl"><span class="w"></span><span class="nt">categories</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&#34;分类&#34;</span><span class="p">]</span><span class="w">
+</span></span></span><span class="line"><span class="ln"> 7</span><span class="cl"><span class="w"></span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;文章描述，用于SEO和摘要&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="ln"> 8</span><span class="cl"><span class="w"></span><span class="nt">ShowToc</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="ln"> 9</span><span class="cl"><span class="w"></span><span class="nt">TocOpen</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span></span></span><span class="line"><span class="ln">10</span><span class="cl"><span class="w"></span><span class="nt">weight</span><span class="p">:</span><span class="w"> </span><span class="m">1</span><span class="w">  </span><span class="c"># 用于排序</span><span class="w">
+</span></span></span><span class="line"><span class="ln">11</span><span class="cl"><span class="w"></span><span class="nn">---</span><span class="w">
+</span></span></span></code></pre></div><h3 id="2-内容组织结构">2. 内容组织结构</h3>
+<p>推荐的内容组织方式：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="ln">1</span><span class="cl">content/
+</span></span><span class="line"><span class="ln">2</span><span class="cl">├── posts/           # 博客文章
+</span></span><span class="line"><span class="ln">3</span><span class="cl">│   ├── 2025/       # 按年份组织
+</span></span><span class="line"><span class="ln">4</span><span class="cl">│   │   ├── 01/     # 按月份组织
+</span></span><span class="line"><span class="ln">5</span><span class="cl">│   │   └── 02/
+</span></span><span class="line"><span class="ln">6</span><span class="cl">│   └── tech/       # 按主题组织
+</span></span><span class="line"><span class="ln">7</span><span class="cl">├── pages/          # 静态页面
+</span></span><span class="line"><span class="ln">8</span><span class="cl">└── docs/           # 文档类内容
+</span></span></code></pre></div><h3 id="3-图片管理">3. 图片管理</h3>
+<h4 id="方式一使用-static-目录">方式一：使用 static 目录</h4>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="ln">1</span><span class="cl">static/
+</span></span><span class="line"><span class="ln">2</span><span class="cl">└── images/
+</span></span><span class="line"><span class="ln">3</span><span class="cl">    ├── 2025/
+</span></span><span class="line"><span class="ln">4</span><span class="cl">    │   └── 01/
+</span></span><span class="line"><span class="ln">5</span><span class="cl">    │       └── example.jpg
+</span></span><span class="line"><span class="ln">6</span><span class="cl">    └── common/
+</span></span><span class="line"><span class="ln">7</span><span class="cl">        └── logo.png
+</span></span></code></pre></div><p>在文章中引用：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-markdown" data-lang="markdown"><span class="line"><span class="ln">1</span><span class="cl">![<span class="nt">示例图片</span>](<span class="na">/images/2025/01/example.jpg</span>)
+</span></span></code></pre></div><h4 id="方式二使用-page-bundle">方式二：使用 Page Bundle</h4>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="ln">1</span><span class="cl">content/
+</span></span><span class="line"><span class="ln">2</span><span class="cl">└── posts/
+</span></span><span class="line"><span class="ln">3</span><span class="cl">    └── my-post/
+</span></span><span class="line"><span class="ln">4</span><span class="cl">        ├── index.md
+</span></span><span class="line"><span class="ln">5</span><span class="cl">        ├── image1.jpg
+</span></span><span class="line"><span class="ln">6</span><span class="cl">        └── image2.png
+</span></span></code></pre></div><p>在文章中引用：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-markdown" data-lang="markdown"><span class="line"><span class="ln">1</span><span class="cl">![<span class="nt">示例图片</span>](<span class="na">image1.jpg</span>)
+</span></span></code></pre></div><h2 id="配置优化">配置优化</h2>
+<h3 id="1-性能优化配置">1. 性能优化配置</h3>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-toml" data-lang="toml"><span class="line"><span class="ln"> 1</span><span class="cl"><span class="c"># hugo.toml</span>
+</span></span><span class="line"><span class="ln"> 2</span><span class="cl"><span class="p">[</span><span class="nx">minify</span><span class="p">]</span>
+</span></span><span class="line"><span class="ln"> 3</span><span class="cl">  <span class="nx">disableCSS</span> <span class="p">=</span> <span class="kc">false</span>
+</span></span><span class="line"><span class="ln"> 4</span><span class="cl">  <span class="nx">disableHTML</span> <span class="p">=</span> <span class="kc">false</span>
+</span></span><span class="line"><span class="ln"> 5</span><span class="cl">  <span class="nx">disableJS</span> <span class="p">=</span> <span class="kc">false</span>
+</span></span><span class="line"><span class="ln"> 6</span><span class="cl">  <span class="nx">disableJSON</span> <span class="p">=</span> <span class="kc">false</span>
+</span></span><span class="line"><span class="ln"> 7</span><span class="cl">  <span class="nx">disableSVG</span> <span class="p">=</span> <span class="kc">false</span>
+</span></span><span class="line"><span class="ln"> 8</span><span class="cl">  <span class="nx">disableXML</span> <span class="p">=</span> <span class="kc">false</span>
+</span></span><span class="line"><span class="ln"> 9</span><span class="cl">
+</span></span><span class="line"><span class="ln">10</span><span class="cl"><span class="p">[</span><span class="nx">imaging</span><span class="p">]</span>
+</span></span><span class="line"><span class="ln">11</span><span class="cl">  <span class="nx">resampleFilter</span> <span class="p">=</span> <span class="s2">&#34;CatmullRom&#34;</span>
+</span></span><span class="line"><span class="ln">12</span><span class="cl">  <span class="nx">quality</span> <span class="p">=</span> <span class="mi">85</span>
+</span></span><span class="line"><span class="ln">13</span><span class="cl">  <span class="nx">anchor</span> <span class="p">=</span> <span class="s2">&#34;smart&#34;</span>
+</span></span></code></pre></div><h3 id="2-缓存配置">2. 缓存配置</h3>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-toml" data-lang="toml"><span class="line"><span class="ln"> 1</span><span class="cl"><span class="p">[</span><span class="nx">caches</span><span class="p">]</span>
+</span></span><span class="line"><span class="ln"> 2</span><span class="cl">  <span class="p">[</span><span class="nx">caches</span><span class="p">.</span><span class="nx">getjson</span><span class="p">]</span>
+</span></span><span class="line"><span class="ln"> 3</span><span class="cl">    <span class="nx">dir</span> <span class="p">=</span> <span class="s2">&#34;:cacheDir/:project&#34;</span>
+</span></span><span class="line"><span class="ln"> 4</span><span class="cl">    <span class="nx">maxAge</span> <span class="p">=</span> <span class="s2">&#34;10m&#34;</span>
+</span></span><span class="line"><span class="ln"> 5</span><span class="cl">  <span class="p">[</span><span class="nx">caches</span><span class="p">.</span><span class="nx">getcsv</span><span class="p">]</span>
+</span></span><span class="line"><span class="ln"> 6</span><span class="cl">    <span class="nx">dir</span> <span class="p">=</span> <span class="s2">&#34;:cacheDir/:project&#34;</span>
+</span></span><span class="line"><span class="ln"> 7</span><span class="cl">    <span class="nx">maxAge</span> <span class="p">=</span> <span class="s2">&#34;10m&#34;</span>
+</span></span><span class="line"><span class="ln"> 8</span><span class="cl">  <span class="p">[</span><span class="nx">caches</span><span class="p">.</span><span class="nx">images</span><span class="p">]</span>
+</span></span><span class="line"><span class="ln"> 9</span><span class="cl">    <span class="nx">dir</span> <span class="p">=</span> <span class="s2">&#34;:resourceDir/_gen&#34;</span>
+</span></span><span class="line"><span class="ln">10</span><span class="cl">    <span class="nx">maxAge</span> <span class="p">=</span> <span class="s2">&#34;720h&#34;</span>
+</span></span></code></pre></div><h2 id="开发技巧">开发技巧</h2>
+<h3 id="1-本地开发">1. 本地开发</h3>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="ln">1</span><span class="cl"><span class="c1"># 启动开发服务器，包含草稿</span>
+</span></span><span class="line"><span class="ln">2</span><span class="cl">hugo server -D
+</span></span><span class="line"><span class="ln">3</span><span class="cl">
+</span></span><span class="line"><span class="ln">4</span><span class="cl"><span class="c1"># 启动开发服务器，监听所有接口</span>
+</span></span><span class="line"><span class="ln">5</span><span class="cl">hugo server --bind 0.0.0.0 -D
+</span></span><span class="line"><span class="ln">6</span><span class="cl">
+</span></span><span class="line"><span class="ln">7</span><span class="cl"><span class="c1"># 启动开发服务器，指定端口</span>
+</span></span><span class="line"><span class="ln">8</span><span class="cl">hugo server -p <span class="m">8080</span> -D
+</span></span></code></pre></div><h3 id="2-内容创建">2. 内容创建</h3>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="ln">1</span><span class="cl"><span class="c1"># 创建新文章</span>
+</span></span><span class="line"><span class="ln">2</span><span class="cl">hugo new posts/my-new-post.md
+</span></span><span class="line"><span class="ln">3</span><span class="cl">
+</span></span><span class="line"><span class="ln">4</span><span class="cl"><span class="c1"># 创建新页面</span>
+</span></span><span class="line"><span class="ln">5</span><span class="cl">hugo new pages/about.md
+</span></span><span class="line"><span class="ln">6</span><span class="cl">
+</span></span><span class="line"><span class="ln">7</span><span class="cl"><span class="c1"># 使用自定义模板创建内容</span>
+</span></span><span class="line"><span class="ln">8</span><span class="cl">hugo new --kind post posts/my-post.md
+</span></span></code></pre></div><h3 id="3-构建优化">3. 构建优化</h3>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="ln">1</span><span class="cl"><span class="c1"># 生产环境构建</span>
+</span></span><span class="line"><span class="ln">2</span><span class="cl">hugo --minify
+</span></span><span class="line"><span class="ln">3</span><span class="cl">
+</span></span><span class="line"><span class="ln">4</span><span class="cl"><span class="c1"># 构建并显示详细信息</span>
+</span></span><span class="line"><span class="ln">5</span><span class="cl">hugo --verbose
+</span></span><span class="line"><span class="ln">6</span><span class="cl">
+</span></span><span class="line"><span class="ln">7</span><span class="cl"><span class="c1"># 构建特定环境</span>
+</span></span><span class="line"><span class="ln">8</span><span class="cl">hugo --environment production
+</span></span></code></pre></div><h2 id="自定义技巧">自定义技巧</h2>
+<h3 id="1-自定义短代码">1. 自定义短代码</h3>
+<p>创建 <code>layouts/shortcodes/note.html</code>：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="line"><span class="ln">1</span><span class="cl"><span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&#34;note {{ .Get 0 }}&#34;</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="ln">2</span><span class="cl">    <span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&#34;note-title&#34;</span><span class="p">&gt;</span>{{ .Get 1 | default &#34;注意&#34; }}<span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="ln">3</span><span class="cl">    <span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&#34;note-content&#34;</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="ln">4</span><span class="cl">        {{ .Inner | markdownify }}
+</span></span><span class="line"><span class="ln">5</span><span class="cl">    <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="ln">6</span><span class="cl"><span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+</span></span></code></pre></div><p>使用方式：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-markdown" data-lang="markdown"><span class="line"><span class="ln">1</span><span class="cl"><div class="note note-info">
+    <div class="note-title">ℹ️ 提示</div>
+    <div class="note-content">
+        这是一个信息提示框。
+    </div>
+</div>
+
+<style>
+.note {
+    padding: 1rem;
+    margin: 1.5rem 0;
+    border-radius: 6px;
+    border-left: 4px solid;
+    background: #f8f9fa;
+}
+
+.note-title {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+}
+
+.note-content {
+    color: #555;
+    line-height: 1.6;
+}
+
+.note-content p:last-child {
+    margin-bottom: 0;
+}
+
+.note-info {
+    border-color: #2196f3;
+    background: #e3f2fd;
+}
+
+.note-info .note-title {
+    color: #1976d2;
+}
+
+.note-warning {
+    border-color: #ff9800;
+    background: #fff3e0;
+}
+
+.note-warning .note-title {
+    color: #f57c00;
+}
+
+.note-danger {
+    border-color: #f44336;
+    background: #ffebee;
+}
+
+.note-danger .note-title {
+    color: #d32f2f;
+}
+
+.note-success {
+    border-color: #4caf50;
+    background: #e8f5e8;
+}
+
+.note-success .note-title {
+    color: #388e3c;
+}
+</style>
+
+</span></span></code></pre></div><blockquote>
+<p><strong>提示</strong>：这是一个信息提示框的示例。</p></blockquote>
+<h3 id="2-自定义css">2. 自定义CSS</h3>
+<p>在 <code>assets/css/extended/</code> 目录下创建CSS文件：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-css" data-lang="css"><span class="line"><span class="ln"> 1</span><span class="cl"><span class="c">/* custom.css */</span>
+</span></span><span class="line"><span class="ln"> 2</span><span class="cl"><span class="p">.</span><span class="nc">note</span> <span class="p">{</span>
+</span></span><span class="line"><span class="ln"> 3</span><span class="cl">    <span class="k">padding</span><span class="p">:</span> <span class="mi">1</span><span class="kt">rem</span><span class="p">;</span>
+</span></span><span class="line"><span class="ln"> 4</span><span class="cl">    <span class="k">margin</span><span class="p">:</span> <span class="mi">1</span><span class="kt">rem</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="ln"> 5</span><span class="cl">    <span class="k">border-radius</span><span class="p">:</span> <span class="mi">4</span><span class="kt">px</span><span class="p">;</span>
+</span></span><span class="line"><span class="ln"> 6</span><span class="cl">    <span class="k">border-left</span><span class="p">:</span> <span class="mi">4</span><span class="kt">px</span> <span class="kc">solid</span><span class="p">;</span>
+</span></span><span class="line"><span class="ln"> 7</span><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="ln"> 8</span><span class="cl">
+</span></span><span class="line"><span class="ln"> 9</span><span class="cl"><span class="p">.</span><span class="nc">note</span><span class="p">.</span><span class="nc">info</span> <span class="p">{</span>
+</span></span><span class="line"><span class="ln">10</span><span class="cl">    <span class="k">background-color</span><span class="p">:</span> <span class="mh">#e3f2fd</span><span class="p">;</span>
+</span></span><span class="line"><span class="ln">11</span><span class="cl">    <span class="k">border-color</span><span class="p">:</span> <span class="mh">#2196f3</span><span class="p">;</span>
+</span></span><span class="line"><span class="ln">12</span><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="ln">13</span><span class="cl">
+</span></span><span class="line"><span class="ln">14</span><span class="cl"><span class="p">.</span><span class="nc">note</span><span class="p">.</span><span class="nc">warning</span> <span class="p">{</span>
+</span></span><span class="line"><span class="ln">15</span><span class="cl">    <span class="k">background-color</span><span class="p">:</span> <span class="mh">#fff3e0</span><span class="p">;</span>
+</span></span><span class="line"><span class="ln">16</span><span class="cl">    <span class="k">border-color</span><span class="p">:</span> <span class="mh">#ff9800</span><span class="p">;</span>
+</span></span><span class="line"><span class="ln">17</span><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h3 id="3-自定义模板">3. 自定义模板</h3>
+<p>创建自定义列表模板 <code>layouts/_default/list.html</code>：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="line"><span class="ln"> 1</span><span class="cl">{{ define &#34;main&#34; }}
+</span></span><span class="line"><span class="ln"> 2</span><span class="cl"><span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&#34;posts-list&#34;</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="ln"> 3</span><span class="cl">    {{ range .Pages }}
+</span></span><span class="line"><span class="ln"> 4</span><span class="cl">    <span class="p">&lt;</span><span class="nt">article</span> <span class="na">class</span><span class="o">=</span><span class="s">&#34;post-entry&#34;</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="ln"> 5</span><span class="cl">        <span class="p">&lt;</span><span class="nt">header</span> <span class="na">class</span><span class="o">=</span><span class="s">&#34;entry-header&#34;</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="ln"> 6</span><span class="cl">            <span class="p">&lt;</span><span class="nt">h2</span><span class="p">&gt;&lt;</span><span class="nt">a</span> <span class="na">href</span><span class="o">=</span><span class="s">&#34;{{ .Permalink }}&#34;</span><span class="p">&gt;</span>{{ .Title }}<span class="p">&lt;/</span><span class="nt">a</span><span class="p">&gt;&lt;/</span><span class="nt">h2</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="ln"> 7</span><span class="cl">            <span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&#34;entry-meta&#34;</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="ln"> 8</span><span class="cl">                <span class="p">&lt;</span><span class="nt">time</span><span class="p">&gt;</span>{{ .Date.Format &#34;2006-01-02&#34; }}<span class="p">&lt;/</span><span class="nt">time</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="ln"> 9</span><span class="cl">                {{ with .Params.tags }}
+</span></span><span class="line"><span class="ln">10</span><span class="cl">                <span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&#34;tags&#34;</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="ln">11</span><span class="cl">                    {{ range . }}
+</span></span><span class="line"><span class="ln">12</span><span class="cl">                    <span class="p">&lt;</span><span class="nt">span</span> <span class="na">class</span><span class="o">=</span><span class="s">&#34;tag&#34;</span><span class="p">&gt;</span>{{ . }}<span class="p">&lt;/</span><span class="nt">span</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="ln">13</span><span class="cl">                    {{ end }}
+</span></span><span class="line"><span class="ln">14</span><span class="cl">                <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="ln">15</span><span class="cl">                {{ end }}
+</span></span><span class="line"><span class="ln">16</span><span class="cl">            <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="ln">17</span><span class="cl">        <span class="p">&lt;/</span><span class="nt">header</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="ln">18</span><span class="cl">        <span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&#34;entry-content&#34;</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="ln">19</span><span class="cl">            {{ .Summary }}
+</span></span><span class="line"><span class="ln">20</span><span class="cl">        <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="ln">21</span><span class="cl">    <span class="p">&lt;/</span><span class="nt">article</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="ln">22</span><span class="cl">    {{ end }}
+</span></span><span class="line"><span class="ln">23</span><span class="cl"><span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="ln">24</span><span class="cl">{{ end }}
+</span></span></code></pre></div><h2 id="部署技巧">部署技巧</h2>
+<h3 id="1-github-pages-部署">1. GitHub Pages 部署</h3>
+<p>创建 <code>.github/workflows/hugo.yml</code>：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="ln"> 1</span><span class="cl"><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">Deploy Hugo site to Pages</span><span class="w">
+</span></span></span><span class="line"><span class="ln"> 2</span><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="ln"> 3</span><span class="cl"><span class="w"></span><span class="nt">on</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="ln"> 4</span><span class="cl"><span class="w">  </span><span class="nt">push</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="ln"> 5</span><span class="cl"><span class="w">    </span><span class="nt">branches</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&#34;main&#34;</span><span class="p">]</span><span class="w">
+</span></span></span><span class="line"><span class="ln"> 6</span><span class="cl"><span class="w">  </span><span class="nt">workflow_dispatch</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="ln"> 7</span><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="ln"> 8</span><span class="cl"><span class="w"></span><span class="nt">permissions</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="ln"> 9</span><span class="cl"><span class="w">  </span><span class="nt">contents</span><span class="p">:</span><span class="w"> </span><span class="l">read</span><span class="w">
+</span></span></span><span class="line"><span class="ln">10</span><span class="cl"><span class="w">  </span><span class="nt">pages</span><span class="p">:</span><span class="w"> </span><span class="l">write</span><span class="w">
+</span></span></span><span class="line"><span class="ln">11</span><span class="cl"><span class="w">  </span><span class="nt">id-token</span><span class="p">:</span><span class="w"> </span><span class="l">write</span><span class="w">
+</span></span></span><span class="line"><span class="ln">12</span><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="ln">13</span><span class="cl"><span class="w"></span><span class="nt">jobs</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="ln">14</span><span class="cl"><span class="w">  </span><span class="nt">build</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="ln">15</span><span class="cl"><span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l">ubuntu-latest</span><span class="w">
+</span></span></span><span class="line"><span class="ln">16</span><span class="cl"><span class="w">    </span><span class="nt">steps</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="ln">17</span><span class="cl"><span class="w">      </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">Checkout</span><span class="w">
+</span></span></span><span class="line"><span class="ln">18</span><span class="cl"><span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l">actions/checkout@v4</span><span class="w">
+</span></span></span><span class="line"><span class="ln">19</span><span class="cl"><span class="w">      </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">Setup Hugo</span><span class="w">
+</span></span></span><span class="line"><span class="ln">20</span><span class="cl"><span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l">peaceiris/actions-hugo@v2</span><span class="w">
+</span></span></span><span class="line"><span class="ln">21</span><span class="cl"><span class="w">        </span><span class="nt">with</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="ln">22</span><span class="cl"><span class="w">          </span><span class="nt">hugo-version</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;latest&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="ln">23</span><span class="cl"><span class="w">          </span><span class="nt">extended</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="ln">24</span><span class="cl"><span class="w">      </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">Build</span><span class="w">
+</span></span></span><span class="line"><span class="ln">25</span><span class="cl"><span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l">hugo --minify</span><span class="w">
+</span></span></span><span class="line"><span class="ln">26</span><span class="cl"><span class="w">      </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">Upload artifact</span><span class="w">
+</span></span></span><span class="line"><span class="ln">27</span><span class="cl"><span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l">actions/upload-pages-artifact@v2</span><span class="w">
+</span></span></span><span class="line"><span class="ln">28</span><span class="cl"><span class="w">        </span><span class="nt">with</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="ln">29</span><span class="cl"><span class="w">          </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l">./public</span><span class="w">
+</span></span></span><span class="line"><span class="ln">30</span><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="ln">31</span><span class="cl"><span class="w">  </span><span class="nt">deploy</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="ln">32</span><span class="cl"><span class="w">    </span><span class="nt">environment</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="ln">33</span><span class="cl"><span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">github-pages</span><span class="w">
+</span></span></span><span class="line"><span class="ln">34</span><span class="cl"><span class="w">      </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l">${{ steps.deployment.outputs.page_url }}</span><span class="w">
+</span></span></span><span class="line"><span class="ln">35</span><span class="cl"><span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l">ubuntu-latest</span><span class="w">
+</span></span></span><span class="line"><span class="ln">36</span><span class="cl"><span class="w">    </span><span class="nt">needs</span><span class="p">:</span><span class="w"> </span><span class="l">build</span><span class="w">
+</span></span></span><span class="line"><span class="ln">37</span><span class="cl"><span class="w">    </span><span class="nt">steps</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="ln">38</span><span class="cl"><span class="w">      </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">Deploy to GitHub Pages</span><span class="w">
+</span></span></span><span class="line"><span class="ln">39</span><span class="cl"><span class="w">        </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l">deployment</span><span class="w">
+</span></span></span><span class="line"><span class="ln">40</span><span class="cl"><span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l">actions/deploy-pages@v2</span><span class="w">
+</span></span></span></code></pre></div><h3 id="2-netlify-部署">2. Netlify 部署</h3>
+<p>创建 <code>netlify.toml</code>：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-toml" data-lang="toml"><span class="line"><span class="ln"> 1</span><span class="cl"><span class="p">[</span><span class="nx">build</span><span class="p">]</span>
+</span></span><span class="line"><span class="ln"> 2</span><span class="cl">  <span class="nx">publish</span> <span class="p">=</span> <span class="s2">&#34;public&#34;</span>
+</span></span><span class="line"><span class="ln"> 3</span><span class="cl">  <span class="nx">command</span> <span class="p">=</span> <span class="s2">&#34;hugo --gc --minify&#34;</span>
+</span></span><span class="line"><span class="ln"> 4</span><span class="cl">
+</span></span><span class="line"><span class="ln"> 5</span><span class="cl"><span class="p">[</span><span class="nx">context</span><span class="p">.</span><span class="nx">production</span><span class="p">.</span><span class="nx">environment</span><span class="p">]</span>
+</span></span><span class="line"><span class="ln"> 6</span><span class="cl">  <span class="nx">HUGO_VERSION</span> <span class="p">=</span> <span class="s2">&#34;0.146.0&#34;</span>
+</span></span><span class="line"><span class="ln"> 7</span><span class="cl">  <span class="nx">HUGO_ENV</span> <span class="p">=</span> <span class="s2">&#34;production&#34;</span>
+</span></span><span class="line"><span class="ln"> 8</span><span class="cl">  <span class="nx">HUGO_ENABLEGITINFO</span> <span class="p">=</span> <span class="s2">&#34;true&#34;</span>
+</span></span><span class="line"><span class="ln"> 9</span><span class="cl">
+</span></span><span class="line"><span class="ln">10</span><span class="cl"><span class="p">[</span><span class="nx">context</span><span class="p">.</span><span class="nx">split1</span><span class="p">]</span>
+</span></span><span class="line"><span class="ln">11</span><span class="cl">  <span class="nx">command</span> <span class="p">=</span> <span class="s2">&#34;hugo --gc --minify --enableGitInfo&#34;</span>
+</span></span><span class="line"><span class="ln">12</span><span class="cl">
+</span></span><span class="line"><span class="ln">13</span><span class="cl"><span class="p">[</span><span class="nx">context</span><span class="p">.</span><span class="nx">split1</span><span class="p">.</span><span class="nx">environment</span><span class="p">]</span>
+</span></span><span class="line"><span class="ln">14</span><span class="cl">  <span class="nx">HUGO_VERSION</span> <span class="p">=</span> <span class="s2">&#34;0.146.0&#34;</span>
+</span></span><span class="line"><span class="ln">15</span><span class="cl">  <span class="nx">HUGO_ENV</span> <span class="p">=</span> <span class="s2">&#34;production&#34;</span>
+</span></span><span class="line"><span class="ln">16</span><span class="cl">
+</span></span><span class="line"><span class="ln">17</span><span class="cl"><span class="p">[</span><span class="nx">context</span><span class="p">.</span><span class="nx">deploy-preview</span><span class="p">]</span>
+</span></span><span class="line"><span class="ln">18</span><span class="cl">  <span class="nx">command</span> <span class="p">=</span> <span class="s2">&#34;hugo --gc --minify --buildFuture -b $DEPLOY_PRIME_URL&#34;</span>
+</span></span><span class="line"><span class="ln">19</span><span class="cl">
+</span></span><span class="line"><span class="ln">20</span><span class="cl"><span class="p">[</span><span class="nx">context</span><span class="p">.</span><span class="nx">deploy-preview</span><span class="p">.</span><span class="nx">environment</span><span class="p">]</span>
+</span></span><span class="line"><span class="ln">21</span><span class="cl">  <span class="nx">HUGO_VERSION</span> <span class="p">=</span> <span class="s2">&#34;0.146.0&#34;</span>
+</span></span><span class="line"><span class="ln">22</span><span class="cl">
+</span></span><span class="line"><span class="ln">23</span><span class="cl"><span class="p">[</span><span class="nx">context</span><span class="p">.</span><span class="nx">branch-deploy</span><span class="p">]</span>
+</span></span><span class="line"><span class="ln">24</span><span class="cl">  <span class="nx">command</span> <span class="p">=</span> <span class="s2">&#34;hugo --gc --minify -b $DEPLOY_PRIME_URL&#34;</span>
+</span></span><span class="line"><span class="ln">25</span><span class="cl">
+</span></span><span class="line"><span class="ln">26</span><span class="cl"><span class="p">[</span><span class="nx">context</span><span class="p">.</span><span class="nx">branch-deploy</span><span class="p">.</span><span class="nx">environment</span><span class="p">]</span>
+</span></span><span class="line"><span class="ln">27</span><span class="cl">  <span class="nx">HUGO_VERSION</span> <span class="p">=</span> <span class="s2">&#34;0.146.0&#34;</span>
+</span></span></code></pre></div><h2 id="性能优化">性能优化</h2>
+<h3 id="1-图片优化">1. 图片优化</h3>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="line"><span class="ln"> 1</span><span class="cl"><span class="c">&lt;!-- 在模板中使用响应式图片 --&gt;</span>
+</span></span><span class="line"><span class="ln"> 2</span><span class="cl">{{ $image := .Resources.GetMatch &#34;featured-image.*&#34; }}
+</span></span><span class="line"><span class="ln"> 3</span><span class="cl">{{ if $image }}
+</span></span><span class="line"><span class="ln"> 4</span><span class="cl">  {{ $small := $image.Resize &#34;600x&#34; }}
+</span></span><span class="line"><span class="ln"> 5</span><span class="cl">  {{ $medium := $image.Resize &#34;1200x&#34; }}
+</span></span><span class="line"><span class="ln"> 6</span><span class="cl">  {{ $large := $image.Resize &#34;1800x&#34; }}
+</span></span><span class="line"><span class="ln"> 7</span><span class="cl">  <span class="p">&lt;</span><span class="nt">img</span> 
+</span></span><span class="line"><span class="ln"> 8</span><span class="cl">    <span class="na">src</span><span class="o">=</span><span class="s">&#34;{{ $small.RelPermalink }}&#34;</span>
+</span></span><span class="line"><span class="ln"> 9</span><span class="cl">    <span class="na">srcset</span><span class="o">=</span><span class="s">&#34;{{ $small.RelPermalink }} 600w,
+</span></span></span><span class="line"><span class="ln">10</span><span class="cl"><span class="s">            {{ $medium.RelPermalink }} 1200w,
+</span></span></span><span class="line"><span class="ln">11</span><span class="cl"><span class="s">            {{ $large.RelPermalink }} 1800w&#34;</span>
+</span></span><span class="line"><span class="ln">12</span><span class="cl">    <span class="na">sizes</span><span class="o">=</span><span class="s">&#34;(max-width: 600px) 100vw, 
+</span></span></span><span class="line"><span class="ln">13</span><span class="cl"><span class="s">           (max-width: 1200px) 50vw, 
+</span></span></span><span class="line"><span class="ln">14</span><span class="cl"><span class="s">           33vw&#34;</span>
+</span></span><span class="line"><span class="ln">15</span><span class="cl">    <span class="na">alt</span><span class="o">=</span><span class="s">&#34;{{ .Title }}&#34;</span>
+</span></span><span class="line"><span class="ln">16</span><span class="cl">    <span class="na">loading</span><span class="o">=</span><span class="s">&#34;lazy&#34;</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="ln">17</span><span class="cl">{{ end }}
+</span></span></code></pre></div><h3 id="2-资源优化">2. 资源优化</h3>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-toml" data-lang="toml"><span class="line"><span class="ln">1</span><span class="cl"><span class="c"># hugo.toml</span>
+</span></span><span class="line"><span class="ln">2</span><span class="cl"><span class="p">[</span><span class="nx">params</span><span class="p">.</span><span class="nx">assets</span><span class="p">]</span>
+</span></span><span class="line"><span class="ln">3</span><span class="cl">  <span class="nx">disableHLJS</span> <span class="p">=</span> <span class="kc">false</span>
+</span></span><span class="line"><span class="ln">4</span><span class="cl">  <span class="nx">disableFingerprinting</span> <span class="p">=</span> <span class="kc">false</span>
+</span></span><span class="line"><span class="ln">5</span><span class="cl">  <span class="nx">favicon</span> <span class="p">=</span> <span class="s2">&#34;/favicon.ico&#34;</span>
+</span></span><span class="line"><span class="ln">6</span><span class="cl">  <span class="nx">favicon16x16</span> <span class="p">=</span> <span class="s2">&#34;/favicon-16x16.png&#34;</span>
+</span></span><span class="line"><span class="ln">7</span><span class="cl">  <span class="nx">favicon32x32</span> <span class="p">=</span> <span class="s2">&#34;/favicon-32x32.png&#34;</span>
+</span></span><span class="line"><span class="ln">8</span><span class="cl">  <span class="nx">apple_touch_icon</span> <span class="p">=</span> <span class="s2">&#34;/apple-touch-icon.png&#34;</span>
+</span></span><span class="line"><span class="ln">9</span><span class="cl">  <span class="nx">safari_pinned_tab</span> <span class="p">=</span> <span class="s2">&#34;/safari-pinned-tab.svg&#34;</span>
+</span></span></code></pre></div><h2 id="总结">总结</h2>
+<p>Hugo-Self 基于 Hugo 的强大功能，通过合理的配置和优化，可以创建出快速、美观、易维护的博客网站。</p>
+<p>关键要点：</p>
+<ol>
+<li><strong>内容为王</strong>：专注于创作优质内容</li>
+<li><strong>结构清晰</strong>：合理组织文件和目录结构</li>
+<li><strong>性能优先</strong>：优化图片和资源加载</li>
+<li><strong>持续改进</strong>：根据需要逐步优化和自定义</li>
+</ol>
+<hr>
+<p><em>掌握这些技巧，让你的 Hugo-Self 博客更加出色！</em></p>
+]]></content:encoded>
+    </item>
+  </channel>
+</rss>

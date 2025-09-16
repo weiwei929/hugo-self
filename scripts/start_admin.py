@@ -38,12 +38,17 @@ class AdminRequestHandler(http.server.BaseHTTPRequestHandler):
     def do_GET(self):
         """GET请求处理"""
         try:
+            print(f"[调试] 收到GET请求: {self.path}")
             if self.path == '/' or self.path == '/admin/':
+                print(f"[调试] 匹配到首页路由，调用serve_admin_page")
                 self.serve_admin_page('index.html')
-            elif self.path == '/admin/login/' or self.path == '/admin/login':
-                self.serve_admin_page('login.html')
+            elif self.path == '/admin/login/' or self.path == '/admin/login' or self.path == '/login/' or self.path == '/login':
+                print(f"[调试] 匹配到登录页面路由，调用serve_login_page")
+                self.serve_login_page()
             elif self.path == '/admin/documents/' or self.path == '/admin/documents':
                 self.serve_admin_page('documents.html')
+            elif self.path == '/admin/editor/' or self.path == '/admin/editor':
+                self.serve_admin_page('editor.html')
             elif self.path == '/admin/images/' or self.path == '/admin/images':
                 self.serve_admin_page('images.html')
             elif self.path == '/admin/process/' or self.path == '/admin/process':
@@ -61,11 +66,8 @@ class AdminRequestHandler(http.server.BaseHTTPRequestHandler):
     def serve_admin_page(self, page_name):
         """服务管理后台页面"""
         try:
-            # 先在layouts/admin目录中查找
+            # 统一使用layouts/admin目录
             admin_page_path = self.admin_root / 'layouts' / 'admin' / page_name
-            if not admin_page_path.exists():
-                # 再在partials/admin目录中查找
-                admin_page_path = self.admin_root / 'layouts' / 'partials' / 'admin' / page_name
             
             if admin_page_path.exists():
                 with open(admin_page_path, 'r', encoding='utf-8') as f:
@@ -84,38 +86,77 @@ class AdminRequestHandler(http.server.BaseHTTPRequestHandler):
         except Exception as e:
             print(f"[管理后台] 服务页面错误: {e}")
             self.send_error(500, f"Server error: {e}")
-    
+
+    def serve_login_page(self):
+        """专门处理登录页面，不添加任何外部CSS链接"""
+        try:
+            admin_page_path = Path(__file__).parent.parent / 'layouts' / 'admin' / 'login.html'
+            print(f"[调试] 登录页面路径: {admin_page_path}")
+            print(f"[调试] 文件是否存在: {admin_page_path.exists()}")
+
+            if admin_page_path.exists():
+                with open(admin_page_path, 'r', encoding='utf-8') as f:
+                    content = f.read()
+
+                print(f"[调试] 读取的内容长度: {len(content)}")
+                print(f"[调试] 内容前100字符: {content[:100]}")
+
+                # 登录页面只做最基本的模板替换，不添加任何CSS链接
+                content = content.replace('{{ .Site.Title }}', 'Hugo-Self 管理后台')
+                content = content.replace('{{ .Title }}', '登录页面')
+
+                self.send_response(200)
+                self.send_header('Content-type', 'text/html; charset=utf-8')
+                self.send_header('Cache-Control', 'no-cache')
+                self.end_headers()
+                self.wfile.write(content.encode('utf-8'))
+                print(f"[调试] 登录页面发送成功")
+            else:
+                print(f"[调试] 登录页面文件不存在")
+                self.send_error(404, f"Login page not found")
+        except Exception as e:
+            print(f"[管理后台] 登录页面错误: {e}")
+            self.send_error(500, f"Server error: {e}")
+
     def process_hugo_template(self, content):
         """处理Hugo模板语法，替换为静态链接"""
         global _hugo_port
         hugo_base_url = f"http://localhost:{_hugo_port or 8000}"
-        
-        # 替换CSS资源链接
+
+        # 检查是否是登录页面（已经有内联样式，不需要外部CSS）
+        if '<style>' in content and 'login-container' in content:
+            # 登录页面：只处理基本的模板语法，完全不添加任何CSS链接
+            content = content.replace('{{ .Site.Title }}', 'Hugo-Self 管理后台')
+            content = content.replace('{{ .Title }}', '登录页面')
+            # 确保没有任何CSS链接被添加
+            return content
+
+        # 其他页面：正常处理CSS资源链接
         content = content.replace(
             '{{ $adminCSS := resources.Get "css/extended/admin.css" | resources.Minify }}',
             ''
         )
         content = content.replace(
             '{{ $adminCSS.RelPermalink }}',
-            f'{hugo_base_url}/css/extended/admin.min.css'  # 修正为实际路径
+            f'{hugo_base_url}/assets/css/extended/admin.css'  # 指向Hugo服务器
         )
-        
+
         # 替换其他常见的Hugo模板语法
         content = content.replace('{{ .Site.Title }}', 'Hugo-Self 管理后台')
         content = content.replace('{{ .Title }}', '管理后台')
-        
+
         # 处理静态资源链接，指向Hugo服务器
         content = re.sub(
             r'{{ \$\w+\.RelPermalink }}',
             f'{hugo_base_url}/css/',
             content
         )
-        
+
         # 修复页面中的链接，确保指向正确的管理后台路径
         content = content.replace('href="/', 'href="')
         content = content.replace('href="admin/', 'href="/admin/')
         content = content.replace('href="//', 'href="/')  # 修复双斜杠
-        
+
         return content
     
     def proxy_hugo_asset(self, asset_path):

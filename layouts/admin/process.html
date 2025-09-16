@@ -4,10 +4,196 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>文档处理 - Hugo-Self</title>
-    {{ $adminCSS := resources.Get "css/extended/admin.css" | resources.Minify }}
-    <link rel="stylesheet" href="{{ $adminCSS.RelPermalink }}">
-</head>
-<body>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .header h1 {
+            margin: 0;
+            color: #333;
+            font-size: 1.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: #666;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            transition: all 0.2s ease;
+        }
+
+        .nav-links a:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .container {
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .process-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            height: calc(100vh - 200px);
+        }
+
+        .editor-panel,
+        .preview-panel {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .panel-header {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #e1e5e9;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f8f9fa;
+            border-radius: 10px 10px 0 0;
+        }
+
+        .panel-header h3 {
+            margin: 0;
+            color: #333;
+        }
+
+        .panel-content {
+            flex: 1;
+            padding: 1.5rem;
+            overflow-y: auto;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+
+        .form-group textarea {
+            min-height: 300px;
+            resize: vertical;
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .tags-input {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            min-height: 2.5rem;
+            align-items: center;
+        }
+
+        .tag {
+            background: #667eea;
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .tag-remove {
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .tag-input {
+            border: none;
+            outline: none;
+            flex: 1;
+            min-width: 100px;
+        }
+
+        .btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            background: #5a6fd8;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .btn-success {
+            background: #28a745;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+        }
+
+        .btn-danger {
             background: #dc3545;
         }
 
@@ -137,6 +323,112 @@
         .status-pending { background: #ffc107; }
         .status-processing { background: #007bff; }
         .status-ready { background: #28a745; }
+
+        .text-muted {
+            color: #666;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 1rem;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+        }
+
+        .alert-info {
+            background: #d1ecf1;
+            color: #0c5460;
+            padding: 1rem;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+        }
+
+        .document-selector {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            grid-column: 1 / -1;
+        }
+
+        .documents-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .document-card {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .document-card:hover {
+            border-color: #667eea;
+            background: #f0f2ff;
+            transform: translateY(-2px);
+        }
+
+        .document-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .document-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .document-meta {
+            font-size: 0.8rem;
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        .document-preview {
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-processing {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .status-ready {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-published {
+            background: #e2e3e5;
+            color: #383d41;
+        }
+
+        .text-center {
+            text-align: center;
+            padding: 2rem;
+        }
 
         @media (max-width: 1024px) {
             .process-layout {
@@ -313,22 +605,155 @@
             const docId = urlParams.get('id');
             
             if (!docId) {
-                alert('未指定文档ID');
-                window.location.href = '/admin/documents/';
+                // 没有指定文档ID，显示文档选择界面
+                showDocumentSelector();
                 return;
             }
 
-            const stored = localStorage.getItem('hugo_self_documents') || '[]';
-            const documents = JSON.parse(stored);
-            currentDocument = documents.find(d => d.id === docId);
+            // 先尝试从服务器加载
+            fetch(`http://localhost:8081/api/documents/${docId}`)
+                .then(response => {
+                    if (response.ok) {
+                        return response.json();
+                    }
+                    throw new Error('文档不存在');
+                })
+                .then(document => {
+                    currentDocument = document;
+                    populateForm();
+                })
+                .catch(error => {
+                    console.warn('服务器加载失败，尝试本地存储:', error);
+                    
+                    // 回退到localStorage
+                    const stored = localStorage.getItem('hugo_self_documents') || '[]';
+                    const documents = JSON.parse(stored);
+                    currentDocument = documents.find(d => d.id === docId);
+                    
+                    if (!currentDocument) {
+                        showError('文档不存在，请选择其他文档');
+                        showDocumentSelector();
+                        return;
+                    }
+
+                    populateForm();
+                });
+        }
+
+        // 显示文档选择界面
+        function showDocumentSelector() {
+            const container = document.querySelector('.process-layout');
+            container.innerHTML = `
+                <div class="document-selector">
+                    <div class="panel-header">
+                        <h3>📄 选择要处理的文档</h3>
+                        <a href="/admin/documents/" class="btn btn-secondary">返回文档管理</a>
+                    </div>
+                    <div class="panel-content">
+                        <div class="alert-info">
+                            <strong>提示：</strong>您可以从下方列表中选择一个文档进行处理，或者返回文档管理页面。
+                        </div>
+                        <div id="documentsList"></div>
+                    </div>
+                </div>
+            `;
             
-            if (!currentDocument) {
-                alert('文档不存在');
-                window.location.href = '/admin/documents/';
+            // 加载可用文档列表
+            loadAvailableDocuments();
+        }
+
+        // 加载可用文档列表
+        function loadAvailableDocuments() {
+            // 先尝试从服务器加载
+            fetch('http://localhost:8081/api/documents')
+                .then(response => response.json())
+                .then(documents => {
+                    displayDocumentsList(documents);
+                })
+                .catch(error => {
+                    console.warn('服务器连接失败，使用本地数据:', error);
+                    const stored = localStorage.getItem('hugo_self_documents') || '[]';
+                    const documents = JSON.parse(stored);
+                    displayDocumentsList(documents);
+                });
+        }
+
+        // 显示文档列表
+        function displayDocumentsList(documents) {
+            const listDiv = document.getElementById('documentsList');
+            
+            if (documents.length === 0) {
+                listDiv.innerHTML = `
+                    <div class="text-center">
+                        <p>暂无可处理的文档</p>
+                        <a href="/admin/documents/" class="btn">去上传文档</a>
+                    </div>
+                `;
                 return;
             }
+            
+            listDiv.innerHTML = `
+                <div class="documents-grid">
+                    ${documents.map(doc => `
+                        <div class="document-card" onclick="selectDocument('${doc.id}')">
+                            <div class="document-header">
+                                <div class="document-title">${doc.title}</div>
+                                <span class="status-badge status-${doc.status}">
+                                    ${getStatusText(doc.status)}
+                                </span>
+                            </div>
+                            <div class="document-meta">
+                                ${new Date(doc.created_at).toLocaleDateString()} • 
+                                ${doc.word_count || 0} 字 • 
+                                ${doc.source || 'manual'}
+                            </div>
+                            <div class="document-preview">
+                                ${getPreview(doc.content)}
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
 
-            populateForm();
+        // 选择文档
+        function selectDocument(docId) {
+            window.location.href = `/admin/process/?id=${docId}`;
+        }
+
+        // 显示错误信息
+        function showError(message) {
+            const container = document.querySelector('.container');
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'error-message';
+            errorDiv.textContent = message;
+            container.insertBefore(errorDiv, container.firstChild);
+            
+            // 3秒后自动消失
+            setTimeout(() => {
+                errorDiv.remove();
+            }, 3000);
+        }
+
+        // 获取状态文本
+        function getStatusText(status) {
+            const statusMap = {
+                pending: '待处理',
+                processing: '处理中',
+                ready: '待发布',
+                published: '已发布'
+            };
+            return statusMap[status] || status;
+        }
+
+        // 获取预览内容
+        function getPreview(content) {
+            // 移除 Front Matter
+            content = content.replace(/^---\s*\n[\s\S]*?\n---\s*\n/, '');
+            // 移除标题
+            content = content.replace(/^#+\s+.+$/gm, '');
+            // 获取前100个字符
+            return content.trim().substring(0, 100) + (content.length > 100 ? '...' : '');
         }
 
         // 填充表单
@@ -581,10 +1006,103 @@
                 localStorage.setItem('hugo_self_documents', JSON.stringify(documents));
             }
             
+            // 同时尝试保存到服务器
+            fetch('http://localhost:8081/api/documents/save', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    id: currentDocument.id,
+                    title: currentDocument.title,
+                    content: contentWithFrontMatter
+                })
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result.success) {
+                    console.log('文档已同步到服务器');
+                }
+            })
+            .catch(error => {
+                console.warn('服务器同步失败，但本地已保存:', error);
+            });
+            
             // 更新状态显示
             updateStatus('ready', '待发布');
             
-            alert('文档已保存！');
+            // 显示保存成功并提供后续选项
+            showSaveSuccessDialog();
+        }
+
+        // 显示保存成功对话框
+        function showSaveSuccessDialog() {
+            const overlay = document.createElement('div');
+            overlay.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.8);
+                color: white;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 1.1em;
+                z-index: 10000;
+                text-align: center;
+            `;
+            
+            overlay.innerHTML = `
+                <div style="
+                    background: #28a745;
+                    padding: 2rem;
+                    border-radius: 10px;
+                    max-width: 500px;
+                ">
+                    <div style="font-size: 2em; margin-bottom: 1rem;">✅</div>
+                    <h3 style="margin-bottom: 1rem;">文档已保存成功！</h3>
+                    <p style="margin-bottom: 2rem; line-height: 1.6;">
+                        您的文档已经处理完毕并处于待发布状态。<br>
+                        现在您可以选择：
+                    </p>
+                    <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                        <button onclick="publishDocument()" 
+                                style="background: #007bff; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 5px; cursor: pointer;">
+                            🚀 直接发布
+                        </button>
+                        <button onclick="openInEditor()" 
+                                style="background: #6f42c1; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 5px; cursor: pointer;">
+                            ✏️ 进入编辑器继续完善
+                        </button>
+                        <button onclick="returnToDocuments()" 
+                                style="background: #6c757d; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 5px; cursor: pointer;">
+                            📁 返回文档管理
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(overlay);
+        }
+
+        // 进入编辑器继续完善
+        function openInEditor() {
+            // 保存当前编辑状态到localStorage
+            localStorage.setItem('editor_document_id', currentDocument.id);
+            localStorage.setItem('editor_from_process', 'true');
+            
+            // 在新标签页打开编辑器
+            window.open(`/admin/editor/?id=${currentDocument.id}`, '_blank');
+            
+            // 关闭对话框
+            document.querySelector('[style*="fixed"]').remove();
+        }
+
+        // 返回文档管理
+        function returnToDocuments() {
+            window.location.href = '/admin/documents/';
         }
 
         function generateFrontMatter(formData) {

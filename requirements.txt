@@ -1,0 +1,9 @@
+# Hugo-Self 依赖列表
+# 基础依赖
+pathlib>=1.0.1
+urllib3>=1.26.7
+# 可选依赖
+Pillow>=9.0.0  # 图片处理
+markdown>=3.3.6  # Markdown 解析
+PyYAML>=6.0  # YAML 解析
+python-frontmatter>=1.0.0  # 前置元数据处理

@@ -64,6 +64,64 @@ class DocumentManager:
         (self.static_dir / "images").mkdir(exist_ok=True)
         (self.static_dir / "images" / "posts").mkdir(exist_ok=True)
 
+        # 图片管理目录结构
+        (self.static_dir / "images" / "documents").mkdir(exist_ok=True)
+        (self.static_dir / "images" / "gallery").mkdir(exist_ok=True)
+        (self.static_dir / "images" / "gallery" / "photography").mkdir(exist_ok=True)
+        (self.static_dir / "images" / "gallery" / "screenshots").mkdir(exist_ok=True)
+        (self.static_dir / "images" / "gallery" / "misc").mkdir(exist_ok=True)
+        (self.static_dir / "images" / "temp").mkdir(exist_ok=True)
+
+    def upload_image(self, image_data: bytes, filename: str, category: str = "gallery",
+                    subcategory: str = "misc", tags: List[str] = None, description: str = "") -> Dict:
+        """上传图片到指定分类"""
+        import uuid
+        from datetime import datetime
+
+        # 生成唯一ID和文件名
+        image_id = f"img_{int(datetime.now().timestamp())}_{uuid.uuid4().hex[:8]}"
+        file_ext = Path(filename).suffix.lower()
+        new_filename = f"{image_id}{file_ext}"
+
+        # 确定保存路径
+        if category == "documents":
+            save_dir = self.static_dir / "images" / "documents"
+        elif category == "gallery":
+            save_dir = self.static_dir / "images" / "gallery" / subcategory
+        else:
+            save_dir = self.static_dir / "images" / "temp"
+
+        save_dir.mkdir(parents=True, exist_ok=True)
+        image_path = save_dir / new_filename
+
+        # 保存图片文件
+        with open(image_path, 'wb') as f:
+            f.write(image_data)
+
+        # 创建图片元数据
+        image_meta = {
+            "id": image_id,
+            "filename": filename,
+            "stored_filename": new_filename,
+            "path": str(image_path.relative_to(self.static_dir)),
+            "url": f"/images/{image_path.relative_to(self.static_dir / 'images')}",
+            "category": category,
+            "subcategory": subcategory,
+            "tags": tags or [],
+            "description": description,
+            "size": len(image_data),
+            "upload_time": datetime.now().isoformat(),
+            "used_in_documents": []
+        }
+
+        # 保存元数据到JSON文件
+        meta_file = self.admin_dir / "images" / f"{image_id}.json"
+        with open(meta_file, 'w', encoding='utf-8') as f:
+            json.dump(image_meta, f, ensure_ascii=False, indent=2)
+
+        logger.info(f"图片上传成功: {filename} -> {new_filename}")
+        return image_meta
+
     def import_document(self, file_path: Union[str, Path], source: str = "manual") -> Dict:
         """导入文档到待处理池"""
         file_path_obj = Path(file_path)
@@ -205,6 +263,71 @@ class DocumentManager:
             json.dump(document, f, ensure_ascii=False, indent=2)
         
         print(f"文档已发布: {filename}")
+        return document
+
+    def save_document(self, doc_id: str, title: str, content: str) -> Dict:
+        """保存文档内容和元数据"""
+        # 先在processed目录中查找
+        processed_file = self.admin_dir / "processed" / f"{doc_id}.json"
+        processed_content_file = self.admin_dir / "processed" / f"{doc_id}.md"
+        
+        # 如果在processed目录中不存在，在pending目录中查找
+        if not processed_file.exists():
+            pending_file = self.admin_dir / "pending" / f"{doc_id}.json"
+            pending_content_file = self.admin_dir / "pending" / f"{doc_id}.md"
+            
+            if pending_file.exists():
+                # 从 pending 移动到 processed
+                with open(pending_file, 'r', encoding='utf-8') as f:
+                    document = json.load(f)
+                processed_file = self.admin_dir / "processed" / f"{doc_id}.json"
+                processed_content_file = self.admin_dir / "processed" / f"{doc_id}.md"
+                
+                # 删除pending文件
+                try:
+                    pending_file.unlink()
+                    if pending_content_file.exists():
+                        pending_content_file.unlink()
+                except Exception as e:
+                    logger.warning(f"删除pending文件时出错: {e}")
+            else:
+                # 创建新文档
+                document = {
+                    "id": doc_id,
+                    "filename": f"{doc_id}.md",
+                    "title": title,
+                    "content": content,
+                    "status": "processed",
+                    "source": "web_editor",
+                    "created_at": datetime.now().isoformat(),
+                    "updated_at": datetime.now().isoformat(),
+                    "size": len(content.encode('utf-8')),
+                    "word_count": self._count_words(content),
+                    "images": [],
+                    "front_matter": {}
+                }
+        else:
+            # 加载现有文档
+            with open(processed_file, 'r', encoding='utf-8') as f:
+                document = json.load(f)
+        
+        # 更新文档信息
+        document["title"] = title
+        document["content"] = content
+        document["updated_at"] = datetime.now().isoformat()
+        document["size"] = len(content.encode('utf-8'))
+        document["word_count"] = self._count_words(content)
+        document["status"] = "processed"
+        
+        # 保存文档元数据
+        with open(processed_file, 'w', encoding='utf-8') as f:
+            json.dump(document, f, ensure_ascii=False, indent=2)
+        
+        # 保存文档内容
+        with open(processed_content_file, 'w', encoding='utf-8') as f:
+            f.write(content)
+        
+        logger.info(f"文档已保存: {doc_id}")
         return document
 
     def list_documents(self, status: Optional[str] = None) -> List[Dict]:
@@ -469,7 +592,15 @@ class WebAPI:
 
                 def do_GET(self):
                     try:
-                        if self.path.startswith('/api/documents'):
+                        if self.path.startswith('/api/documents/'):
+                            # 检查是否是获取单个文档的请求
+                            path_parts = self.path.split('/')
+                            if len(path_parts) == 4 and path_parts[3]:  # /api/documents/{doc_id}
+                                doc_id = path_parts[3]
+                                self.handle_get_document(doc_id)
+                            else:
+                                self.handle_list_documents()
+                        elif self.path.startswith('/api/documents'):
                             self.handle_list_documents()
                         elif self.path == '/api/health':
                             self.send_json_response(200, {"status": "ok", "message": "API服务器正常运行"})
@@ -483,6 +614,8 @@ class WebAPI:
                     try:
                         if self.path == '/api/documents/import':
                             self.handle_import_document()
+                        elif self.path == '/api/documents/save':
+                            self.handle_save_document()
                         elif self.path == '/api/documents/publish':
                             self.handle_publish_document()
                         elif self.path == '/api/documents/process':
@@ -528,9 +661,51 @@ class WebAPI:
                             "error": f"获取失败: {str(e)}"
                         })
 
-                def handle_import_document(self):
-                    """处理文档导入请求"""
+                def handle_get_document(self, doc_id):
+                    """处理获取单个文档请求"""
                     try:
+                        # 先在processed目录中查找
+                        processed_file = document_manager.admin_dir / "processed" / f"{doc_id}.json"
+                        content_file = document_manager.admin_dir / "processed" / f"{doc_id}.md"
+
+                        # 如果在processed目录中不存在，在pending目录中查找
+                        if not processed_file.exists():
+                            processed_file = document_manager.admin_dir / "pending" / f"{doc_id}.json"
+                            content_file = document_manager.admin_dir / "pending" / f"{doc_id}.md"
+
+                        if not processed_file.exists():
+                            self.send_json_response(404, {
+                                "success": False,
+                                "error": "文档不存在"
+                            })
+                            return
+
+                        # 加载文档元数据
+                        with open(processed_file, 'r', encoding='utf-8') as f:
+                            document = json.load(f)
+
+                        # 加载文档内容
+                        if content_file.exists():
+                            with open(content_file, 'r', encoding='utf-8') as f:
+                                document['content'] = f.read()
+
+                        self.send_json_response(200, {
+                            "success": True,
+                            "data": document,
+                            "message": "文档获取成功"
+                        })
+
+                    except Exception as e:
+                        print(f"[API] 获取文档失败: {e}")
+                        self.send_json_response(500, {
+                            "success": False,
+                            "error": f"获取失败: {str(e)}"
+                        })
+
+                def handle_save_document(self):
+                    """处理文档保存请求"""
+                    try:
+                        # 读取请求体获取文档数据
                         content_length = int(self.headers.get('Content-Length', 0))
                         if content_length == 0:
                             self.send_json_response(400, {
@@ -540,13 +715,19 @@ class WebAPI:
                             return
 
                         post_data = self.rfile.read(content_length)
-                        
-                        # 处理JSON格式
                         try:
                             data = json.loads(post_data.decode('utf-8'))
-                            filename = data.get('filename', 'document.md')
+                            doc_id = data.get('id')
+                            title = data.get('title', '')
                             content = data.get('content', '')
                             
+                            if not doc_id:
+                                self.send_json_response(400, {
+                                    "success": False,
+                                    "error": "缺少文档ID"
+                                })
+                                return
+                                
                             if not content:
                                 self.send_json_response(400, {
                                     "success": False,
@@ -555,6 +736,62 @@ class WebAPI:
                                 return
                                 
                         except json.JSONDecodeError as e:
+                            self.send_json_response(400, {
+                                "success": False,
+                                "error": f"无效的JSON数据: {str(e)}"
+                            })
+                            return
+                        
+                        # 保存文档
+                        doc = document_manager.save_document(doc_id, title, content)
+                        
+                        self.send_json_response(200, {
+                            "success": True,
+                            "data": doc,
+                            "message": "文档保存成功"
+                        })
+                        
+                    except Exception as e:
+                        print(f"[API] 文档保存失败: {e}")
+                        self.send_json_response(500, {
+                            "success": False,
+                            "error": f"保存失败: {str(e)}"
+                        })
+
+                def handle_import_document(self):
+                    """处理文档导入请求"""
+                    try:
+                        print(f"[API] 处理文档导入请求")
+                        content_length = int(self.headers.get('Content-Length', 0))
+                        print(f"[API] Content-Length: {content_length}")
+                        if content_length == 0:
+                            print(f"[API] 请求内容为空")
+                            self.send_json_response(400, {
+                                "success": False,
+                                "error": "请求内容为空"
+                            })
+                            return
+
+                        post_data = self.rfile.read(content_length)
+                        print(f"[API] 接收到数据: {post_data[:100]}...")  # 只显示前100个字符
+                        
+                        # 处理JSON格式
+                        try:
+                            data = json.loads(post_data.decode('utf-8'))
+                            filename = data.get('filename', 'document.md')
+                            content = data.get('content', '')
+                            print(f"[API] 解析数据 - filename: {filename}, content长度: {len(content)}")
+                            
+                            if not content:
+                                print(f"[API] 文档内容为空")
+                                self.send_json_response(400, {
+                                    "success": False,
+                                    "error": "文档内容不能为空"
+                                })
+                                return
+                                
+                        except json.JSONDecodeError as e:
+                            print(f"[API] JSON解析错误: {e}")
                             self.send_json_response(400, {
                                 "success": False,
                                 "error": f"无效的JSON数据: {str(e)}"

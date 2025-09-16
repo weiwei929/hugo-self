@@ -4,10 +4,209 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>文档管理 - Hugo-Self</title>
-    {{ $adminCSS := resources.Get "css/extended/admin.css" | resources.Minify }}
-    <link rel="stylesheet" href="{{ $adminCSS.RelPermalink }}">
-</head>
-<body>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .header h1 {
+            margin: 0;
+            color: #333;
+            font-size: 1.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: #666;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            transition: all 0.2s ease;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .container {
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .upload-area {
+            background: white;
+            border: 2px dashed #667eea;
+            border-radius: 10px;
+            padding: 3rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .upload-area:hover {
+            border-color: #5a6fd8;
+            background: #f8f9ff;
+        }
+
+        .upload-area.dragover {
+            border-color: #4c63d2;
+            background: #e8ebff;
+        }
+
+        .upload-area h3 {
+            margin: 0 0 1rem 0;
+            color: #333;
+        }
+
+        .upload-area p {
+            margin: 0.5rem 0;
+            color: #666;
+        }
+
+        .text-small {
+            font-size: 0.8rem;
+            color: #999;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            background: #5a6fd8;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        .btn-success {
+            background: #28a745;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+        }
+
+        .documents-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .document-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.2s ease;
+        }
+
+        .document-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .document-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .document-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .document-meta {
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-processing {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .status-ready {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-published {
+            background: #e2e3e5;
+            color: #383d41;
+        }
+
+        .document-preview {
+            color: #666;
+            line-height: 1.5;
+            margin-bottom: 1rem;
+        }
 
         .document-actions {
             display: flex;
@@ -284,9 +483,18 @@
                             content: content
                         })
                     })
-                    .then(response => response.json())
-                    .then(document => {
-                        console.log('文档上传成功:', document);
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                        }
+                        return response.json();
+                    })
+                    .then(result => {
+                        if (!result.success) {
+                            throw new Error(result.error || '上传失败');
+                        }
+                        const document = result.data;
+                        console.log('文档上传成功:', result);
                         
                         uploaded++;
                         const progress = (uploaded / total) * 100;
@@ -296,9 +504,16 @@
                         if (uploaded === total) {
                             setTimeout(() => {
                                 progressDiv.style.display = 'none';
-                                loadDocuments();
+                                loadDocuments(); // 重新加载文档列表
                                 document.getElementById('fileInput').value = '';
-                                alert(`成功上传 ${total} 个文件到服务器！`);
+                                
+                                // 显示成功信息并提示下一步操作
+                                showSuccessMessage(`成功上传 ${total} 个文件到管理池！
+
+接下来您可以：
+1. 在下方列表中选择文档进行处理
+2. 点击“处理”按钮进入编辑模式
+3. 在编辑器中完善内容后发布`);
                             }, 1000);
                         }
                     })
@@ -306,6 +521,18 @@
                         console.error('上传失败:', error);
                         statusDiv.textContent = `上传失败: ${error.message}`;
                         alert(`文件 ${file.name} 上传失败: ${error.message}`);
+                        
+                        // 如果API失败，继续下一个文件的上传
+                        uploaded++;
+                        const progress = (uploaded / total) * 100;
+                        progressFill.style.width = progress + '%';
+                        
+                        if (uploaded === total) {
+                            setTimeout(() => {
+                                progressDiv.style.display = 'none';
+                                document.getElementById('fileInput').value = '';
+                            }, 2000);
+                        }
                     });
                 };
                 
@@ -358,20 +585,47 @@
 
         // 从服务器加载文档列表
         function loadDocuments() {
+            console.log('开始加载文档列表...');
+            
             // 先尝试从服务器加载
             fetch('http://localhost:8081/api/documents')
-                .then(response => response.json())
-                .then(serverDocuments => {
-                    documents = serverDocuments;
-                    console.log('从服务器加载文档:', documents);
+                .then(response => {
+                    console.log('API响应状态:', response.status);
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                    }
+                    return response.json();
+                })
+                .then(result => {
+                    console.log('API响应数据:', result);
+                    
+                    // 检查响应格式
+                    if (result.success && result.data) {
+                        documents = result.data;
+                        console.log('从服务器加载文档成功:', documents.length, '个');
+                    } else if (Array.isArray(result)) {
+                        // 如果直接返回数组
+                        documents = result;
+                        console.log('从服务器加载文档数组:', documents.length, '个');
+                    } else {
+                        console.warn('未知的API响应格式:', result);
+                        documents = [];
+                    }
+                    
                     updateCounts();
                     renderDocuments();
                 })
                 .catch(error => {
-                    console.warn('服务器连接失败，使用本地数据:', error);
+                    console.warn('服务器连接失败，使用本地数据:', error.message);
                     // 如果服务器不可用，回退到localStorage
                     const stored = localStorage.getItem('hugo_self_documents') || '[]';
-                    documents = JSON.parse(stored);
+                    try {
+                        documents = JSON.parse(stored);
+                        console.log('从本地存储加载文档:', documents.length, '个');
+                    } catch (e) {
+                        console.error('解析本地存储数据失败:', e);
+                        documents = [];
+                    }
                     updateCounts();
                     renderDocuments();
                 });
@@ -482,7 +736,7 @@
         function processDocument(id) {
             const doc = documents.find(d => d.id === id);
             if (doc) {
-                // 跳转到处理页面
+                // 跳转到处理页面，而不是直接编辑器
                 window.location.href = `/admin/process/?id=${id}`;
             }
         }
@@ -533,9 +787,59 @@
             }
             
             if (confirm(`确定要处理 ${pendingDocs.length} 个待处理文档吗？`)) {
-                // 这里应该跳转到批量处理页面
-                alert('批量处理功能开发中...');
+                // 跳转到批量处理页面
+                window.location.href = '/admin/process/';
             }
+        }
+
+        // 显示成功信息
+        function showSuccessMessage(message) {
+            const overlay = document.createElement('div');
+            overlay.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.8);
+                color: white;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 1.1em;
+                z-index: 10000;
+                text-align: center;
+                padding: 2rem;
+            `;
+            
+            overlay.innerHTML = `
+                <div style="
+                    background: #28a745;
+                    padding: 2rem;
+                    border-radius: 10px;
+                    max-width: 500px;
+                    line-height: 1.6;
+                    white-space: pre-line;
+                ">
+                    <div style="font-size: 2em; margin-bottom: 1rem;">✅</div>
+                    ${message}
+                    <div style="margin-top: 1.5rem;">
+                        <button onclick="this.closest('[style*=fixed]').remove()" 
+                                style="background: white; color: #28a745; border: none; padding: 0.5rem 1rem; border-radius: 5px; cursor: pointer;">
+                            确定
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(overlay);
+            
+            // 10秒后自动关闭
+            setTimeout(() => {
+                if (overlay.parentNode) {
+                    overlay.remove();
+                }
+            }, 10000);
         }
     </script>
 </body>
